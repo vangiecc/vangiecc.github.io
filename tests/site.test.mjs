@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { readFile } from "node:fs/promises";
+import { readFile, stat } from "node:fs/promises";
 import { fileURLToPath } from "node:url";
 import path from "node:path";
 
@@ -155,5 +155,27 @@ test("research exposes all supported statuses as a text legend", async () => {
   const html = await read("research/index.html");
   for (const status of ["ACTIVE", "EXPLORING", "ARCHIVED"]) {
     assert.match(html, new RegExp(`>${status}<`));
+  }
+});
+
+test("required self-hosted font files are non-empty", async () => {
+  const fonts = [
+    "assets/fonts/instrument-serif-regular.woff2",
+    "assets/fonts/instrument-serif-italic.woff2",
+    "assets/fonts/instrument-sans-variable.woff2",
+    "assets/fonts/jetbrains-mono-variable.woff2",
+  ];
+
+  for (const font of fonts) {
+    const info = await stat(path.join(root, font));
+    assert.ok(info.size > 1000, `${font} is unexpectedly small`);
+  }
+});
+
+test("documents contain no dead links or fabricated entries", async () => {
+  for (const file of ["index.html", ...collections.map(({ file }) => file)]) {
+    const html = await read(file);
+    assert.doesNotMatch(html, /href="#"/);
+    assert.doesNotMatch(html, /example (article|post|note|project)/i);
   }
 });
