@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Research — Vangie</title>
+    <meta name="description" content="Questions, experiments, and research progress by Vangie.">
+    <script>
+      try {
+        const saved = localStorage.getItem('vangie-theme');
+        const prefersLight = window.matchMedia('(prefers-color-scheme: light)').matches;
+        document.documentElement.dataset.theme = saved === 'dark' || saved === 'light'
+          ? saved
+          : prefersLight ? 'light' : 'dark';
+      } catch (_) {
+        document.documentElement.dataset.theme = 'dark';
+      }
+    </script>
+    <link rel="stylesheet" href="/assets/css/site.css">
+    <script type="module" src="/assets/js/theme.js"></script>
+  </head>
+  <body class="collection-page collection-page--research">
+    <header class="site-header">
+      <div class="header-inner wrap wrap--wide">
+        <a class="brand" href="/" aria-label="Vangie home">
+          <span class="brand-mark" aria-hidden="true"></span><span>Vangie</span>
+        </a>
+        <nav class="site-nav" aria-label="Primary">
+          <a href="/blog/"><span class="nav-index">01</span>Blog</a>
+          <a href="/notes/"><span class="nav-index">02</span>Notes</a>
+          <a href="/research/" aria-current="page"><span class="nav-index">03</span>Research</a>
+        </nav>
+        <button class="theme-toggle" type="button" aria-label="Switch to light theme" title="Switch to light theme">
+          <span class="theme-icon theme-icon--sun" aria-hidden="true">☼</span>
+          <span class="theme-icon theme-icon--moon" aria-hidden="true">◐</span>
+        </button>
+      </div>
+    </header>
+    <main class="site-main collection-main wrap page-enter">
+      <header class="collection-hero">
+        <p class="collection-page-index">03 / RESEARCH</p>
+        <h1>Questions under investigation.</h1>
+        <p>Experiments, findings, and records of work in progress.</p>
+      </header>
+      <aside class="status-key" aria-label="Research status key">
+        <span><i aria-hidden="true"></i><b>ACTIVE</b> Work in progress</span>
+        <span><i aria-hidden="true"></i><b>EXPLORING</b> Early inquiry</span>
+        <span><i aria-hidden="true"></i><b>ARCHIVED</b> Closed record</span>
+      </aside>
+      <section class="empty-state" aria-labelledby="research-empty-title">
+        <p id="research-empty-title">No entries yet.</p>
+        <p>Research questions and progress records will appear here.</p>
+      </section>
+    </main>
+    <footer class="site-footer"><div class="footer-inner wrap"><p>© 2026 Vangie</p></div></footer>
+  </body>
+</html>

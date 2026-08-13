@@ -107,3 +107,53 @@ test("home layout defines stable responsive rows", async () => {
   assert.match(css, /@media\s*\(max-width:\s*960px\)/);
   assert.match(css, /@media\s*\(max-width:\s*640px\)/);
 });
+
+const collections = [
+  {
+    file: "blog/index.html",
+    route: "/blog/",
+    index: "01 / BLOG",
+    title: "Ideas and observations.",
+    description: "Essays about technology, work, and things worth thinking through.",
+  },
+  {
+    file: "notes/index.html",
+    route: "/notes/",
+    index: "02 / NOTES",
+    title: "Things I'm learning.",
+    description: "Concise notes, references, and incomplete understanding.",
+  },
+  {
+    file: "research/index.html",
+    route: "/research/",
+    index: "03 / RESEARCH",
+    title: "Questions under investigation.",
+    description: "Experiments, findings, and records of work in progress.",
+  },
+];
+
+for (const collection of collections) {
+  test(`${collection.route} has shared navigation, exact copy, and an empty state`, async () => {
+    const html = await read(collection.file);
+
+    assert.match(html, /<html lang="en" data-theme="dark">/);
+    assert.match(
+      html,
+      new RegExp(`<a[^>]+href="${collection.route}"[^>]+aria-current="page"`),
+    );
+    assert.ok(html.includes(collection.index));
+    assert.ok(html.includes(collection.title));
+    assert.ok(html.includes(collection.description));
+    assert.ok(html.includes("No entries yet."));
+    assert.equal((html.match(/<h1\b/g) ?? []).length, 1);
+    assert.match(html, /href="\/assets\/css\/site\.css"/);
+    assert.match(html, /type="module" src="\/assets\/js\/theme\.js"/);
+  });
+}
+
+test("research exposes all supported statuses as a text legend", async () => {
+  const html = await read("research/index.html");
+  for (const status of ["ACTIVE", "EXPLORING", "ARCHIVED"]) {
+    assert.match(html, new RegExp(`>${status}<`));
+  }
+});

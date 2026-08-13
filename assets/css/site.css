@@ -478,6 +478,109 @@ button {
   font-size: 0.82rem;
 }
 
+.collection-page {
+  --page-accent: var(--blog);
+}
+
+.collection-page--notes {
+  --page-accent: var(--notes);
+}
+
+.collection-page--research {
+  --page-accent: var(--research);
+}
+
+.collection-page .brand-mark {
+  background: var(--page-accent);
+  box-shadow: 0 0 12px color-mix(in srgb, var(--page-accent) 70%, transparent);
+}
+
+.collection-main {
+  padding-block: 0 120px;
+}
+
+.collection-hero {
+  padding-block: 110px 86px;
+}
+
+.collection-page-index {
+  color: var(--page-accent);
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+}
+
+.collection-hero h1 {
+  max-width: 15ch;
+  margin-top: 22px;
+  font-family: var(--serif);
+  font-size: 4.5rem;
+  font-weight: 400;
+  line-height: 0.98;
+  letter-spacing: 0;
+}
+
+.collection-hero > p:last-child {
+  max-width: 62ch;
+  margin-top: 28px;
+  color: var(--ink-2);
+  font-size: 1.22rem;
+  line-height: 1.5;
+}
+
+.empty-state {
+  display: grid;
+  min-height: 180px;
+  grid-template-columns: minmax(170px, 0.35fr) minmax(0, 1fr);
+  gap: clamp(28px, 6vw, 90px);
+  align-items: center;
+  padding-block: 34px;
+  border-top: 1px solid var(--line-2);
+  border-bottom: 1px solid var(--line-2);
+}
+
+.empty-state p:first-child {
+  color: var(--ink);
+  font-family: var(--serif);
+  font-size: 1.8rem;
+}
+
+.empty-state p:last-child {
+  max-width: 56ch;
+  color: var(--ink-3);
+}
+
+.status-key {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 24px;
+  padding-bottom: 26px;
+  color: var(--ink-3);
+  font-family: var(--mono);
+  font-size: 0.68rem;
+}
+
+.status-key span {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.status-key i {
+  width: 7px;
+  height: 7px;
+  flex: 0 0 auto;
+  border-radius: 50%;
+  background: var(--page-accent);
+}
+
+.status-key b {
+  color: var(--ink-2);
+  font-weight: 600;
+  letter-spacing: 0.08em;
+}
+
 .site-footer {
   border-top: 1px solid var(--line);
 }
@@ -580,6 +683,32 @@ button {
 
   .recent-section {
     padding-block: 78px 96px;
+  }
+
+  .collection-main {
+    padding-bottom: 88px;
+  }
+
+  .collection-hero {
+    padding-block: 72px 62px;
+  }
+
+  .collection-hero h1 {
+    font-size: 3rem;
+  }
+
+  .collection-hero > p:last-child {
+    font-size: 1.08rem;
+  }
+
+  .empty-state {
+    min-height: 190px;
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .status-key {
+    display: grid;
   }
 }
 
