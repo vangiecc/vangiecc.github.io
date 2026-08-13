@@ -12,12 +12,16 @@ if (section && viewport && world && data) {
 
   function render() {
     world.replaceChildren();
-    for (const [index, node] of visible(data).entries()) {
+    const rows = new Map();
+    const flatten = (node, depth = 0) => [{ node, depth }, ...(state.expanded.has(node.id) ? (node.children ?? []).flatMap((child) => flatten(child, depth + 1)) : [])];
+    for (const [{ node, depth }, index] of flatten(data).map((entry, index) => [entry, index])) {
       const button = document.createElement("button");
       button.className = `mind-map-node${node.id === data.id ? " mind-map-node--root" : ""}`;
       button.type = "button";
       button.dataset.nodeId = node.id;
-      button.style.setProperty("--node-index", index);
+      const row = rows.get(depth) ?? 0; rows.set(depth, row + 1);
+      button.style.setProperty("--node-depth", depth);
+      button.style.setProperty("--node-index", row);
       button.textContent = node.title;
       if (node.children?.length) button.setAttribute("aria-expanded", state.expanded.has(node.id));
       button.addEventListener("click", () => {
