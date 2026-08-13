@@ -203,6 +203,19 @@ test("notes build emits the operating systems archive", async () => {
   assert.match(fileChapter, /<ul>\s*<li><p>当其他用户去读共享文件/);
   assert.match(fileChapter, /<blockquote>\s*<p>建立硬链接时/);
   assert.doesNotMatch(fileChapter, /<pre><code>\s*为使链接父目录D5/);
+  assert.match(fileChapter, /class="math-display"/);
+  assert.match(fileChapter, /class="katex-display"/);
+  assert.doesNotMatch(fileChapter, /<p>\$i=\(b-1\) DIV n\+1\$<\/p>/);
+
+  const deadlocksChapter = await read("notes/operating-systems/synchronization-and-deadlocks/index.html");
+  assert.match(deadlocksChapter, /class="math-inline"/);
+  assert.match(deadlocksChapter, /class="katex"/);
+
+  const katexCss = await stat(path.join(root, "assets/vendor/katex/katex.min.css"));
+  const katexFont = await stat(path.join(root, "assets/vendor/katex/fonts/KaTeX_Main-Regular.woff2"));
+  assert.ok(katexCss.size > 1000, "KaTeX CSS is unexpectedly small");
+  assert.ok(katexFont.size > 1000, "KaTeX font is unexpectedly small");
+  assert.match(fileChapter, /href="\/assets\/vendor\/katex\/katex\.min\.css"/);
 
   const chapterRoutes = [
     "introduction",

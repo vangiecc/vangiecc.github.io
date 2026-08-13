@@ -2,10 +2,13 @@ import { copyFile, mkdir, readFile, readdir, rm, writeFile } from "node:fs/promi
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { marked } from "marked";
+import katex from "katex";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const sourceBook = path.join(root, "notes", "OS+7dcefccb-df9f-49d", "OS+7dcefccb-df9f-49d7-970b-0c30f28a9df2");
 const outputRoot = path.join(root, "notes", "operating-systems");
+const katexSource = path.join(root, "node_modules", "katex", "dist");
+const katexDestination = path.join(root, "assets", "vendor", "katex");
 
 const chapters = [
   ["introduction", "第一章", "Introduction", "引论"],
@@ -40,7 +43,39 @@ async function collectFiles(directory) {
 function shell({ title, content }) {
   const nav = [["01", "Blog", "/blog/"], ["02", "Notes", "/notes/"], ["03", "Research", "/research/"]]
     .map(([number, label, href]) => `<a href="${href}"${label === "Notes" ? ' aria-current="page"' : ""}><span class="nav-index">${number}</span>${label}</a>`).join("");
-  return `<!doctype html><html lang="en" data-theme="dark"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>${escapeHtml(title)} — Vangie</title><meta name="description" content="Operating systems notes by Vangie."><script>try{const s=localStorage.getItem('vangie-theme');const l=matchMedia('(prefers-color-scheme: light)').matches;document.documentElement.dataset.theme=s==='dark'||s==='light'?s:l?'light':'dark'}catch(_){}</script><link rel="stylesheet" href="/assets/css/site.css"><script type="module" src="/assets/js/theme.js"></script></head><body class="collection-page collection-page--notes notes-site"><header class="site-header"><div class="header-inner wrap wrap--wide"><a class="brand" href="/" aria-label="Vangie home"><span class="brand-mark" aria-hidden="true"></span><span>Vangie</span></a><nav class="site-nav" aria-label="Primary">${nav}</nav><button class="theme-toggle" type="button" aria-label="Switch to light theme" title="Switch to light theme"><span class="theme-icon theme-icon--sun" aria-hidden="true">☼</span><span class="theme-icon theme-icon--moon" aria-hidden="true">◐</span></button></div></header><main class="site-main notes-main wrap page-enter">${content}</main><footer class="site-footer"><div class="footer-inner wrap"><p>© 2026 Vangie</p></div></footer></body></html>`;
+  return `<!doctype html><html lang="en" data-theme="dark"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>${escapeHtml(title)} — Vangie</title><meta name="description" content="Operating systems notes by Vangie."><script>try{const s=localStorage.getItem('vangie-theme');const l=matchMedia('(prefers-color-scheme: light)').matches;document.documentElement.dataset.theme=s==='dark'||s==='light'?s:l?'light':'dark'}catch(_){}</script><link rel="stylesheet" href="/assets/css/site.css"><link rel="stylesheet" href="/assets/vendor/katex/katex.min.css"><script type="module" src="/assets/js/theme.js"></script></head><body class="collection-page collection-page--notes notes-site"><header class="site-header"><div class="header-inner wrap wrap--wide"><a class="brand" href="/" aria-label="Vangie home"><span class="brand-mark" aria-hidden="true"></span><span>Vangie</span></a><nav class="site-nav" aria-label="Primary">${nav}</nav><button class="theme-toggle" type="button" aria-label="Switch to light theme" title="Switch to light theme"><span class="theme-icon theme-icon--sun" aria-hidden="true">☼</span><span class="theme-icon theme-icon--moon" aria-hidden="true">◐</span></button></div></header><main class="site-main notes-main wrap page-enter">${content}</main><footer class="site-footer"><div class="footer-inner wrap"><p>© 2026 Vangie</p></div></footer></body></html>`;
+}
+
+function renderMath(markdown) {
+  const tokens = [];
+  const stash = (tex, displayMode) => {
+    const token = `MATHTOKEN${tokens.length}END`;
+    const normalizedTex = tex.trim().replace(/\b(DIV|MOD|INT)\b/g, "\\operatorname{$1}");
+    tokens.push({ token, html: katex.renderToString(normalizedTex, { displayMode, throwOnError: false, trust: false, strict: false }) });
+    return token;
+  };
+  const lines = markdown.split("\n");
+  let fenced = false;
+  const transformed = lines.map((line) => {
+    if (/^\s*(```|~~~)/.test(line)) { fenced = !fenced; return line; }
+    if (fenced) return line;
+    const display = line.match(/^\s*\$\$?(.+?)\$\$?\s*$/);
+    if (display) return stash(display[1], true);
+    return line.replace(/(?<!\\)\$(?!\$)([^$\n]+?)(?<!\\)\$(?!\$)/g, (_, tex) => stash(tex, false));
+  }).join("\n");
+  return { markdown: transformed, tokens };
+}
+
+function restoreMath(html, tokens) {
+  return tokens.reduce((result, { token, html: rendered }) => result.replaceAll(token, `<span class="math-${rendered.includes("katex-display") ? "display" : "inline"}">${rendered}</span>`), html);
+}
+
+async function copyKatexAssets() {
+  await mkdir(path.join(katexDestination, "fonts"), { recursive: true });
+  await copyFile(path.join(katexSource, "katex.min.css"), path.join(katexDestination, "katex.min.css"));
+  for (const file of await readdir(path.join(katexSource, "fonts"))) {
+    if (file.endsWith(".woff2")) await copyFile(path.join(katexSource, "fonts", file), path.join(katexDestination, "fonts", file));
+  }
 }
 
 function headings(markdown) {
@@ -114,7 +149,8 @@ async function buildChapter(chapter) {
   const { mappings, attachments } = await copyAssets(sourceDir, chapter);
   const rewritten = rewriteImages(markdown, mappings);
   const items = headings(rewritten);
-  const body = addHeadingIds(marked.parse(rewritten), items);
+  const math = renderMath(rewritten);
+  const body = restoreMath(addHeadingIds(marked.parse(math.markdown), items), math.tokens);
   const materials = attachments.length ? `<section class="notes-materials"><p class="notes-kicker">MATERIALS</p><div>${attachments.map(({ name, href, type }) => `<a href="${href}" target="_blank" rel="noreferrer"><span>${type}</span>${escapeHtml(name)}</a>`).join("")}</div></section>` : "";
   const content = `<header class="notes-hero"><p class="collection-page-index">${String(chapter.index).padStart(2, "0")} / OPERATING SYSTEMS</p><h1>${escapeHtml(chapter.title)}</h1><p>${escapeHtml(chapter.chineseTitle)} · structured course notes, definitions, algorithms, and review questions.</p></header><div class="notes-layout">${toc(items)}<article class="markdown-body">${body}</article></div>${materials}`;
   await mkdir(path.join(outputRoot, chapter.slug), { recursive: true });
@@ -130,6 +166,7 @@ async function buildIndex(results) {
 
 await rm(outputRoot, { recursive: true, force: true });
 await mkdir(outputRoot, { recursive: true });
+await copyKatexAssets();
 const results = [];
 for (const chapter of chapters) results.push(await buildChapter(chapter));
 await buildIndex(results);

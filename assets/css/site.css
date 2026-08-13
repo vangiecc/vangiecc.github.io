@@ -970,6 +970,26 @@ button {
   background: var(--surface-2);
 }
 
+.markdown-body .math-inline {
+  display: inline-block;
+  margin-inline: 0.12em;
+  color: var(--ink);
+  font-size: 1.02em;
+}
+
+.markdown-body .math-display {
+  display: block;
+  margin: 1.7em 0;
+  overflow-x: auto;
+  padding: 0.45em 0.75em;
+  color: var(--ink);
+  text-align: center;
+}
+
+.markdown-body .math-display .katex {
+  font-size: 1.18em;
+}
+
 .markdown-body img {
   width: auto;
   max-width: 100%;
