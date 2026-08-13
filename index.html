@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vangie — Field Notes, Ideas, and Research</title>
+    <meta name="description" content="Vangie's writing, learning notes, and ongoing research.">
+    <script>
+      try {
+        const saved = localStorage.getItem('vangie-theme');
+        const prefersLight = window.matchMedia('(prefers-color-scheme: light)').matches;
+        document.documentElement.dataset.theme = saved === 'dark' || saved === 'light'
+          ? saved
+          : prefersLight ? 'light' : 'dark';
+      } catch (_) {
+        document.documentElement.dataset.theme = 'dark';
+      }
+    </script>
+    <link rel="stylesheet" href="/assets/css/site.css">
+    <script type="module" src="/assets/js/theme.js"></script>
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="header-inner wrap wrap--wide">
+        <a class="brand" href="/" aria-label="Vangie home">
+          <span class="brand-mark" aria-hidden="true"></span>
+          <span>Vangie</span>
+        </a>
+        <nav class="site-nav" aria-label="Primary">
+          <a href="/blog/"><span class="nav-index">01</span>Blog</a>
+          <a href="/notes/"><span class="nav-index">02</span>Notes</a>
+          <a href="/research/"><span class="nav-index">03</span>Research</a>
+        </nav>
+        <button class="theme-toggle" type="button" aria-label="Switch to light theme" title="Switch to light theme">
+          <span class="theme-icon theme-icon--sun" aria-hidden="true">☼</span>
+          <span class="theme-icon theme-icon--moon" aria-hidden="true">◐</span>
+        </button>
+      </div>
+    </header>
+    <main class="site-main">
+      <section class="intro-shell wrap page-enter">
+        <p class="meta-label">Field notes / ideas / ongoing work</p>
+        <h1>Vangie</h1>
+        <p class="lede">Writing down what I think, what I learn, and what I'm trying to understand.</p>
+      </section>
+    </main>
+    <footer class="site-footer">
+      <div class="footer-inner wrap">
+        <p>© 2026 Vangie</p>
+      </div>
+    </footer>
+  </body>
+</html>
