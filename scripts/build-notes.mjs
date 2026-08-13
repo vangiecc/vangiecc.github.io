@@ -5,6 +5,7 @@ import { marked } from "marked";
 import katex from "katex";
 import { copyKatexAssets as copySharedKatexAssets, renderMarkdown } from "./notes/render-markdown.mjs";
 import { notesShell } from "./notes/site-shell.mjs";
+import { buildComputerOrganization } from "./notes/computer-organization.mjs";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const sourceBook = path.join(root, "notes", "OS+7dcefccb-df9f-49d", "OS+7dcefccb-df9f-49d7-970b-0c30f28a9df2");
@@ -169,4 +170,5 @@ await copySharedKatexAssets(root);
 const results = [];
 for (const chapter of chapters) results.push(await buildChapter(chapter));
 await buildIndex(results);
+await buildComputerOrganization();
 console.log(`Built ${results.length} operating systems chapters at notes/operating-systems/`);

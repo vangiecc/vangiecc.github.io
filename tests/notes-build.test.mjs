@@ -66,3 +66,22 @@ test("six manifests cover every meaningful source line", async () => {
     assert.deepEqual([...coveredLines].sort((a, b) => a - b), [...meaningfulLines].sort((a, b) => a - b), chapter.slug);
   }
 });
+
+test("Computer Organization builds exactly six mind-map chapters", async () => {
+  const index = await read("notes/computer-organization/index.html");
+  assert.match(index, /Computer Organization/);
+  assert.equal((index.match(/class="notes-chapter"/g) ?? []).length, 6);
+  assert.doesNotMatch(index, /计组大题细节注意/);
+
+  const chapter = await read("notes/computer-organization/data-representation-and-operations/index.html");
+  assert.match(chapter, /id="mind-map-data"/);
+  assert.match(chapter, /整数：除基取余，先取到的“余”是低位/);
+  assert.match(chapter, /katex-display/);
+  assert.match(chapter, /\/notes\/computer-organization\/assets\/data-representation-and-operations\//);
+  assert.doesNotMatch(chapter, /<article class="markdown-body">/);
+
+  const generated = await walk(path.join(root, "notes", "computer-organization"));
+  assert.equal(generated.filter((file) => file.endsWith("index.html")).length, 7);
+  assert.equal(generated.filter((file) => file.endsWith(".png")).length, 91);
+  assert.equal(generated.filter((file) => /计组大题|\.csv$/i.test(file)).length, 0);
+});
