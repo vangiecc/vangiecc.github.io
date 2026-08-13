@@ -1,0 +1,171 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>When Do Memories Break? — Vangie</title>
+    <meta name="description" content="Chain-of-stage diagnosis for failures in LLM memory systems.">
+    <script>
+      try {
+        const saved = localStorage.getItem('vangie-theme');
+        const prefersLight = window.matchMedia('(prefers-color-scheme: light)').matches;
+        document.documentElement.dataset.theme = saved === 'dark' || saved === 'light'
+          ? saved
+          : prefersLight ? 'light' : 'dark';
+      } catch (_) {
+        document.documentElement.dataset.theme = 'dark';
+      }
+    </script>
+    <link rel="stylesheet" href="/assets/css/site.css">
+    <script type="module" src="/assets/js/theme.js"></script>
+  </head>
+  <body class="collection-page collection-page--research research-detail">
+    <header class="site-header">
+      <div class="header-inner wrap wrap--wide">
+        <a class="brand" href="/" aria-label="Vangie home"><span class="brand-mark" aria-hidden="true"></span><span>Vangie</span></a>
+        <nav class="site-nav" aria-label="Primary">
+          <a href="/blog/"><span class="nav-index">01</span>Blog</a>
+          <a href="/notes/"><span class="nav-index">02</span>Notes</a>
+          <a href="/research/" aria-current="page"><span class="nav-index">03</span>Research</a>
+        </nav>
+        <button class="theme-toggle" type="button" aria-label="Switch to light theme" title="Switch to light theme">
+          <span class="theme-icon theme-icon--sun" aria-hidden="true">☼</span>
+          <span class="theme-icon theme-icon--moon" aria-hidden="true">◐</span>
+        </button>
+      </div>
+    </header>
+    <main class="site-main notes-main wrap page-enter">
+      <header class="notes-hero research-hero">
+        <p class="collection-page-index">03 / RESEARCH / COMPLETED</p>
+        <h1>When Do Memories Break?</h1>
+        <p>Chain-of-Stage Diagnosis for LLM Memory Systems</p>
+        <div class="research-meta" aria-label="Project metadata">
+          <span><b>STATUS</b> <strong>COMPLETED</strong></span>
+          <span><b>FIELD</b> LLM MEMORY SYSTEMS</span>
+          <span><b>YEAR</b> 2026</span>
+        </div>
+      </header>
+      <div class="notes-layout">
+        <nav class="notes-toc" aria-label="On this page">
+          <p>ON THIS PAGE</p>
+          <ol>
+            <li><a href="#background">Background</a></li>
+            <li><a href="#diagnostic-framework">Diagnostic Framework</a></li>
+            <li><a href="#evaluation-scope">Evaluation Scope</a></li>
+            <li><a href="#datasets">Datasets</a></li>
+            <li><a href="#experimental-results">Experimental Results</a></li>
+            <li><a href="#main-findings">Main Findings</a></li>
+            <li><a href="#limitations">Limitations</a></li>
+            <li><a href="#conclusion">Conclusion</a></li>
+          </ol>
+        </nav>
+        <article class="markdown-body research-article">
+          <h2 id="background">Background</h2>
+          <p>Long-term memory is becoming a core component of persistent LLM agents. Yet these systems still forget user preferences, contradict earlier statements, and fail to use information that appeared much earlier in a conversation.</p>
+          <p>Most benchmarks evaluate only the final answer. That single outcome cannot explain whether a failure began when the system wrote a memory, modified it, retrieved it, or tried to reason with it. The result is an engineering blind spot: the same incorrect answer can point to four very different components.</p>
+          <p>This project introduces <strong>MemEval</strong>, a provenance-aware diagnostic framework for locating likely failures across the memory lifecycle. It is a diagnostic method rather than a new memory architecture.</p>
+
+          <h2 id="diagnostic-framework">Diagnostic Framework</h2>
+          <p>MemEval instruments observable intermediate states and follows each relevant fact from the source dialogue to the generated answer. It assigns the root cause to the earliest stage that deviates, preventing one upstream error from being counted repeatedly as several downstream failures.</p>
+          <table>
+            <caption>Four-stage memory lifecycle and failure taxonomy</caption>
+            <thead><tr><th>Stage</th><th>Function</th><th>Failure types</th></tr></thead>
+            <tbody>
+              <tr><td>Extraction</td><td>Convert dialogue into persistent memories</td><td>Missing, incorrect, or ambiguous information</td></tr>
+              <tr><td>Update</td><td>Consolidate, overwrite, delete, and compress memory</td><td>Erroneous update, deletion, or information weakening</td></tr>
+              <tr><td>Retrieval</td><td>Select and rank memories for a question</td><td>Missed retrieval or unreasonable ranking</td></tr>
+              <tr><td>Utilization</td><td>Use retrieved evidence to construct an answer</td><td>Ignored evidence, reasoning, or format/detail errors</td></tr>
+            </tbody>
+          </table>
+          <p>Together, these stages define an 11-class error taxonomy. The pipeline view makes each diagnosis actionable: an extraction failure calls for better information preservation, while a utilization failure calls for stronger evidence-grounded reasoning.</p>
+
+          <h2 id="evaluation-scope">Evaluation Scope</h2>
+          <p>The study separates the systems being diagnosed from the models used inside those systems and from the models serving as evaluators.</p>
+          <ul>
+            <li><strong>Memory systems:</strong> mem0 is the primary testbed; A-mem, MemoryOS, and OpenClaw test cross-architecture transfer.</li>
+            <li><strong>Base models in mem0:</strong> GPT-4.1-mini, GPT-4o-mini, Qwen3.5-35B, and Qwen3.5-122B test whether greater model capacity improves memory reliability.</li>
+            <li><strong>Meta-evaluators:</strong> GPT-5, DeepSeek V3.2 Exp, and GPT-4.1 approximate expert stage attribution through single-model inference, multi-agent discussion, or ensemble voting.</li>
+          </ul>
+          <p>Expert annotators establish the reference labels by examining each question, answer, supporting dialogue evidence, initial memories, update chains, and retrieved memories. They label only the earliest causal failure and resolve disagreements through discussion.</p>
+
+          <h2 id="datasets">Datasets</h2>
+          <h3>LoCoMo</h3>
+          <p>The primary benchmark contains <strong>1,540 dialogue-grounded QA instances</strong>: 282 Multi-hop, 321 Temporal, 96 Open-domain, and 841 Single-hop questions. These categories stress different components, from retrieval-heavy evidence composition to temporal reasoning and direct recall.</p>
+          <h3>LongMemEval-S</h3>
+          <p>A second evaluation uses all <strong>500 long-term-memory QA instances</strong> from LongMemEval-S. Its knowledge-update, cross-session, preference, and temporal tasks test whether the taxonomy transfers beyond LoCoMo's distribution.</p>
+
+          <h2 id="experimental-results">Experimental Results</h2>
+          <h3>Automated diagnostic consistency</h3>
+          <table>
+            <caption>Agreement between automated and expert diagnosis</caption>
+            <thead><tr><th>Measure</th><th>Agreement</th><th>Interpretation</th></tr></thead>
+            <tbody>
+              <tr><td>Exact Match</td><td>76.04%</td><td>Stage and specific error subtype both agree</td></tr>
+              <tr><td>Stage Match</td><td>81.62%</td><td>The four-stage attribution agrees</td></tr>
+            </tbody>
+          </table>
+          <blockquote><p>The <strong>81.62% Stage Match</strong> measures agreement between automated diagnosis and expert annotation. It is not the QA accuracy of a memory system.</p></blockquote>
+          <table>
+            <caption>Diagnostic consistency by LoCoMo question category</caption>
+            <thead><tr><th>Question category</th><th>Exact Match</th><th>Stage Match</th></tr></thead>
+            <tbody>
+              <tr><td>Multi-hop</td><td>68.44%</td><td>72.34%</td></tr>
+              <tr><td>Temporal</td><td>77.88%</td><td>87.54%</td></tr>
+              <tr><td>Open-domain</td><td>66.67%</td><td>71.88%</td></tr>
+              <tr><td>Single-hop</td><td>78.95%</td><td>83.59%</td></tr>
+            </tbody>
+          </table>
+          <p>Ensemble voting is more stable than a single evaluator or multi-agent discussion. Stage 1 is recognized reliably, but the evaluator has an upstream bias: 40.4% of true Stage 3 failures are attributed to extraction. Multi-hop and open-domain cases therefore continue to benefit from human review.</p>
+
+          <h3>Base-model scaling in mem0</h3>
+          <table>
+            <caption>End-to-end QA accuracy for mem0 by base model</caption>
+            <thead><tr><th>Base model</th><th>LoCoMo QA accuracy</th></tr></thead>
+            <tbody>
+              <tr><td>GPT-4.1-mini</td><td>50.39%</td></tr>
+              <tr><td>GPT-4o-mini</td><td>50.71%</td></tr>
+              <tr><td>Qwen3.5-35B</td><td>57.40%</td></tr>
+              <tr><td>Qwen3.5-122B</td><td>58.31%</td></tr>
+            </tbody>
+          </table>
+          <p>Capacity produces only marginal gains. Stronger models reduce some extraction or retrieval errors but can introduce more ignored-evidence and response-detail errors, shifting the bottleneck downstream rather than removing it.</p>
+
+          <h3>Architecture and dataset transfer</h3>
+          <table>
+            <caption>Diagnostic transfer across memory architectures</caption>
+            <thead><tr><th>Memory system</th><th>Exact Match</th><th>Stage Match</th></tr></thead>
+            <tbody>
+              <tr><td>A-mem</td><td>83.33%</td><td>86.67%</td></tr>
+              <tr><td>MemoryOS</td><td>83.33%</td><td>87.50%</td></tr>
+            </tbody>
+          </table>
+          <p>On the complete LoCoMo set, OpenClaw reaches <strong>73.70% QA accuracy</strong>: 1,135 correct answers and 405 diagnosed failures from 1,540 instances. Missing extraction accounts for 119 failures and missed retrieval for 115.</p>
+          <p>On LongMemEval-S, mem0 with GPT-4.1-mini reaches <strong>49.60% QA accuracy</strong>: 248 correct answers and 252 errors. Missing Critical Information accounts for 166 errors, making extraction even more dominant in cross-session and temporal settings.</p>
+
+          <h2 id="main-findings">Main Findings</h2>
+          <ol>
+            <li><strong>Extraction is the common early bottleneck.</strong> Summary-style compression frequently removes low-frequency entities, qualifiers, implicit evidence, and temporal anchors before they enter persistent memory.</li>
+            <li><strong>Downstream bottlenecks depend on the task.</strong> Multi-hop questions expose missed retrieval; temporal tasks expose reasoning errors; some single-hop failures occur because the model ignores evidence that was successfully retrieved.</li>
+            <li><strong>Scaling does not repair the pipeline.</strong> Larger backbones change where failures appear, but do not eliminate the structural weaknesses of memory extraction, retrieval, and evidence utilization.</li>
+            <li><strong>End-to-end accuracy is not enough.</strong> Two systems with similar QA accuracy may require entirely different engineering interventions.</li>
+            <li><strong>Automated diagnosis is useful at the trend and stage level.</strong> It can reduce the cost of large-scale analysis, while experts remain necessary for subtle cascading and ambiguous cases.</li>
+          </ol>
+
+          <h2 id="limitations">Limitations</h2>
+          <ul>
+            <li>MemEval requires observable intermediate traces and is not directly applicable to fully black-box memory systems.</li>
+            <li>The automated evaluator favors upstream explanations and can confuse retrieval failures with extraction failures.</li>
+            <li>Multi-hop and open-domain attribution is less reliable than temporal and single-hop attribution.</li>
+            <li>The framework diagnoses failures but does not itself introduce stage-specific fixes.</li>
+            <li>The main cross-architecture table does not report the sampled subset size for A-mem and MemoryOS, so those percentages should be treated as preliminary transfer evidence.</li>
+          </ul>
+
+          <h2 id="conclusion">Conclusion</h2>
+          <p>Reliable long-term memory requires more than a stronger language model or a better final QA score. It requires visibility into the entire path from dialogue to stored representation, subsequent updates, retrieval, and final reasoning.</p>
+          <p>MemEval turns memory reliability into a pipeline engineering problem. Its central result is that information is often lost before it reaches persistent memory, while complex tasks continue to fail after storage through retrieval and utilization. Stage-wise diagnosis reveals those differences and supports targeted optimization in place of brute-force scaling.</p>
+        </article>
+      </div>
+    </main>
+    <footer class="site-footer"><div class="footer-inner wrap"><p>© 2026 Vangie</p></div></footer>
+  </body>
+</html>

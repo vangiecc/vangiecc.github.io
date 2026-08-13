@@ -133,7 +133,7 @@ const collections = [
 ];
 
 for (const collection of collections) {
-  test(`${collection.route} has shared navigation, exact copy, and an empty state`, async () => {
+  test(`${collection.route} has shared navigation and exact collection copy`, async () => {
     const html = await read(collection.file);
 
     assert.match(html, /<html lang="en" data-theme="dark">/);
@@ -144,7 +144,7 @@ for (const collection of collections) {
     assert.ok(html.includes(collection.index));
     assert.ok(html.includes(collection.title));
     assert.ok(html.includes(collection.description));
-    if (collection.route !== "/notes/") assert.ok(html.includes("No entries yet."));
+    if (collection.route === "/blog/") assert.ok(html.includes("No entries yet."));
     assert.equal((html.match(/<h1\b/g) ?? []).length, 1);
     assert.match(html, /href="\/assets\/css\/site\.css"/);
     assert.match(html, /type="module" src="\/assets\/js\/theme\.js"/);
@@ -153,9 +153,48 @@ for (const collection of collections) {
 
 test("research exposes all supported statuses as a text legend", async () => {
   const html = await read("research/index.html");
-  for (const status of ["ACTIVE", "EXPLORING", "ARCHIVED"]) {
+  for (const status of ["COMPLETED", "ACTIVE", "EXPLORING", "ARCHIVED"]) {
     assert.match(html, new RegExp(`>${status}<`));
   }
+});
+
+test("research lists the completed memory diagnosis project", async () => {
+  const html = await read("research/index.html");
+  assert.match(html, />COMPLETED</);
+  assert.match(html, /When Do Memories Break\?/);
+  assert.match(html, /Chain-of-Stage Diagnosis for LLM Memory Systems/);
+  assert.match(html, /MemEval is a stage-wise framework/);
+  assert.match(html, /href="\/research\/chain-of-stage-diagnosis\/"/);
+  assert.doesNotMatch(html, /No entries yet\./);
+  assert.doesNotMatch(html, /Chain_of_stage_diagnosis\.pdf|\.pdf["?#]/i);
+});
+
+test("completed memory research has an accessible English detail page", async () => {
+  const html = await read("research/chain-of-stage-diagnosis/index.html");
+  assert.match(html, /<html lang="en" data-theme="dark">/);
+  assert.match(html, /class="collection-page collection-page--research research-detail"/);
+  assert.match(html, /href="\/research\/" aria-current="page"/);
+  assert.equal((html.match(/<h1\b/g) ?? []).length, 1);
+  assert.match(html, />COMPLETED</);
+  assert.match(html, /class="notes-layout"/);
+  assert.match(html, /class="notes-toc"/);
+  assert.match(html, /class="markdown-body research-article"/);
+  for (const id of ["background", "diagnostic-framework", "evaluation-scope", "datasets", "experimental-results", "main-findings", "limitations", "conclusion"]) {
+    assert.match(html, new RegExp(`id="${id}"`));
+  }
+  for (const result of ["1,540", "500", "76.04%", "81.62%", "50.39%", "50.71%", "57.40%", "58.31%", "73.70%", "86.67%", "87.50%"] ) {
+    assert.ok(html.includes(result), `missing result ${result}`);
+  }
+  assert.match(html, /81\.62% Stage Match[^.]*agreement[^.]*expert annotation/i);
+  assert.match(html, /not the QA accuracy/i);
+  assert.equal((html.match(/<caption>/g) ?? []).length, 5);
+  assert.doesNotMatch(html, /\.pdf["?#]|<embed|<iframe|<object/i);
+});
+
+test("the private research PDF is excluded from the published tree", async () => {
+  await assert.rejects(stat(path.join(root, "research/Chain_of_stage_diagnosis.pdf")), { code: "ENOENT" });
+  const ignore = await read(".gitignore");
+  assert.match(ignore, /^research\/Chain_of_stage_diagnosis\.pdf$/m);
 });
 
 test("required self-hosted font files are non-empty", async () => {
