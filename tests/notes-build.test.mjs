@@ -4,6 +4,8 @@ import { readFile, readdir, stat } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { normalizeExportIndentation, renderMarkdown } from "../scripts/notes/render-markdown.mjs";
+import { chapterSourcePath, validateManifest } from "../scripts/notes/computer-organization.mjs";
+import { computerOrganizationChapters } from "../scripts/notes/computer-organization-manifests.mjs";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const read = (file) => readFile(path.join(root, file), "utf8");
@@ -46,4 +48,21 @@ test("shared renderer normalizes Notion indentation and renders display math", (
   assert.match(html, /<p>prose<\/p>/);
   assert.match(html, /class="math-display"/);
   assert.match(html, /class="katex-display"/);
+});
+
+test("manifest validation rejects duplicate ids and overlapping ranges", () => {
+  const source = "2.1 Root\n\nDefinition\n\nFormula $x_1$\n";
+  assert.throws(() => validateManifest({ slug: "bad", nodes: [
+    { id: "same", title: "A", startLine: 1, endLine: 3, children: [] },
+    { id: "same", title: "B", startLine: 3, endLine: 5, children: [] },
+  ] }, source), /duplicate node id|overlap/i);
+});
+
+test("six manifests cover every meaningful source line", async () => {
+  assert.deepEqual(computerOrganizationChapters.map(({ number }) => number), [2, 3, 4, 5, 6, 7]);
+  for (const chapter of computerOrganizationChapters) {
+    const source = await readFile(await chapterSourcePath(chapter), "utf8");
+    const { coveredLines, meaningfulLines } = validateManifest(chapter, source);
+    assert.deepEqual([...coveredLines].sort((a, b) => a - b), [...meaningfulLines].sort((a, b) => a - b), chapter.slug);
+  }
 });
