@@ -56,3 +56,54 @@ test("critical CSS tokens and accessibility rules exist", async () => {
   assert.match(css, /@media\s*\(prefers-reduced-motion:\s*reduce\)/);
   assert.match(css, /34px/);
 });
+
+test("home contains the approved hero, readout, and collection copy", async () => {
+  const html = await read("index.html");
+
+  assert.match(html, /Field notes \/ ideas \/ ongoing work/i);
+  assert.match(
+    html,
+    /Writing down what I think, what I learn, and what I(?:'|&(?:apos|#39);)m trying to understand\./,
+  );
+  assert.match(html, /href="#archive"[^>]*>\s*Explore the archive/);
+  assert.match(html, />CURRENTLY</);
+  for (const label of ["Writing", "Learning", "Researching"]) {
+    assert.match(html, new RegExp(`>${label}<`));
+  }
+  for (const copy of [
+    "Essays, opinions, and observations.",
+    "Learning notes, references, and working knowledge.",
+    "Questions, experiments, and research progress.",
+  ]) {
+    assert.ok(html.includes(copy));
+  }
+  assert.equal((html.match(/No entries yet\./g) ?? []).length, 4);
+});
+
+test("home collection rows are native full-row links with text identities", async () => {
+  const html = await read("index.html");
+
+  for (const [name, route] of [
+    ["Blog", "/blog/"],
+    ["Notes", "/notes/"],
+    ["Research", "/research/"],
+  ]) {
+    assert.match(
+      html,
+      new RegExp(
+        `<a[^>]+class="collection-entry collection-entry--${name.toLowerCase()}"[^>]+href="${route}"`,
+      ),
+    );
+    assert.match(html, new RegExp(`>${name}<`));
+  }
+  assert.match(html, /id="archive"/);
+});
+
+test("home layout defines stable responsive rows", async () => {
+  const css = await read("assets/css/site.css");
+
+  assert.match(css, /\.hero\s*\{[^}]*grid-template-columns:/s);
+  assert.match(css, /\.collection-entry\s*\{[^}]*min-height:/s);
+  assert.match(css, /@media\s*\(max-width:\s*960px\)/);
+  assert.match(css, /@media\s*\(max-width:\s*640px\)/);
+});
