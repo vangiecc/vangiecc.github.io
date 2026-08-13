@@ -1,4 +1,0 @@
-import test from "node:test";
-import assert from "node:assert/strict";
-import { createMapState, toggleNode, openDetail, collapseAll, resetMap, panBy, zoomAt } from "../assets/js/mind-map-state.js";
-test("mind map state transitions expand, detail, collapse, pan, zoom, and reset", () => { const tree = { id: "root", children: [{ id: "a", children: [{ id: "leaf", children: [] }] }] }; let state = createMapState(tree); assert.deepEqual([...state.expanded], ["root"]); state = toggleNode(state, tree, "a"); state = openDetail(state, "leaf"); state = collapseAll(state, tree); assert.equal(state.activeDetailId, null); state = zoomAt(panBy(state, 20, -10), 10, { x: 100, y: 100 }); assert.equal(state.transform.scale, 1.8); assert.deepEqual(resetMap(state, tree).transform, { x: 0, y: 0, scale: 1 }); });

@@ -3,53 +3,37 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { renderMarkdown, rewriteMarkdownImages, escapeHtml } from "./render-markdown.mjs";
 import { notesShell } from "./site-shell.mjs";
-import { computerOrganizationChapters } from "./computer-organization-manifests.mjs";
 
 const projectRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../..");
 export const sourceRoot = path.join(projectRoot, "notes", "CS+755cf848-063d-44c", "CS+755cf848-063d-44cd-8126-c4ead1ceeebf");
+const outputRoot = path.join(projectRoot, "notes", "computer-organization");
+
+export const computerOrganizationChapters = [
+  { number: 2, slug: "data-representation-and-operations", title: "Data Representation and Operations", chineseTitle: "数据的表示和运算", sourcePrefix: "第二章+", sections: [["2.1", "数制与编码"], ["2.2", "运算方法和运算电路"], ["2.3", "浮点数的表示和运算"]] },
+  { number: 3, slug: "memory-systems", title: "Memory Systems", chineseTitle: "存储系统", sourcePrefix: "第三章+", sections: [["3.1", "存储系统概述"], ["3.2", "主存储器"], ["3.4", "外部存储器"], ["3.5", "高速缓冲存储器"]] },
+  { number: 4, slug: "instruction-set", title: "Instruction Set", chineseTitle: "指令系统", sourcePrefix: "第四章+", sections: [["4.1", "指令系统"], ["4.2", "指令的寻址方式"], ["4.3", "程序的机器级代码表示"], ["4.4", "CISC和RISC"]] },
+  { number: 5, slug: "central-processing-unit", title: "Central Processing Unit", chineseTitle: "中央处理器", sourcePrefix: "第五章+", sections: [["5.1", "CPU的功能和基本结构"], ["5.2", "指令执行过程"], ["5.3", "数据通路的功能和基本功能"], ["5.4", "控制器的功能和工作原理"], ["5.5", "异常和中断机制"], ["5.6", "指令流水线"]] },
+  { number: 6, slug: "buses", title: "Buses", chineseTitle: "总线", sourcePrefix: "第六章+", sections: [["6.1", "总线概述"], ["6.2", "总线事务和定时"]] },
+  { number: 7, slug: "input-output-systems", title: "Input / Output Systems", chineseTitle: "输入／输出系统", sourcePrefix: "第七章+", sections: [["7.2", "I/O接口"], ["7.3", "I/O方式"]] },
+];
 
 export async function chapterSourcePath(chapter) {
-  const matches = (await readdir(sourceRoot, { withFileTypes: true }))
-    .filter((entry) => entry.isFile() && entry.name.startsWith(chapter.sourcePrefix) && entry.name.endsWith(".md"));
+  const matches = (await readdir(sourceRoot, { withFileTypes: true })).filter((entry) => entry.isFile() && entry.name.startsWith(chapter.sourcePrefix) && entry.name.endsWith(".md"));
   if (matches.length !== 1) throw new Error(`${chapter.slug}: expected one source Markdown file, found ${matches.length}`);
   return path.join(sourceRoot, matches[0].name);
 }
 
-export function validateManifest(chapter, source) {
-  const lines = source.split("\n");
-  const meaningfulLines = new Set(lines.flatMap((line, index) => line.trim() ? [index + 1] : []));
-  const coveredLines = new Set();
-  const ids = new Set();
-  const visit = (node) => {
-    if (!node.id || ids.has(node.id)) throw new Error(`${chapter.slug}: duplicate node id ${node.id}`);
-    ids.add(node.id);
-    const hasStart = Number.isInteger(node.startLine);
-    const hasEnd = Number.isInteger(node.endLine);
-    if (hasStart !== hasEnd) throw new Error(`${chapter.slug}/${node.id}: both startLine and endLine are required`);
-    if (hasStart) {
-      if (node.startLine < 1 || node.endLine < node.startLine || node.endLine > lines.length) throw new Error(`${chapter.slug}/${node.id}: invalid range ${node.startLine}-${node.endLine}`);
-      for (let line = node.startLine; line <= node.endLine; line += 1) {
-        if (!meaningfulLines.has(line)) continue;
-        if (coveredLines.has(line)) throw new Error(`${chapter.slug}/${node.id}: overlap at line ${line}`);
-        coveredLines.add(line);
-      }
-    }
-    for (const child of node.children ?? []) visit(child);
-  };
-  for (const node of chapter.nodes ?? []) visit(node);
-  for (const line of meaningfulLines) if (!coveredLines.has(line)) throw new Error(`${chapter.slug}: uncovered content at line ${line}`);
-  return { coveredLines, meaningfulLines };
-}
-
-export async function loadChapter(chapter) {
-  const file = await chapterSourcePath(chapter);
-  const source = await readFile(file, "utf8");
-  validateManifest(chapter, source);
-  return { file, source };
-}
-
-const outputRoot = path.join(projectRoot, "notes", "computer-organization");
 const slugify = (value) => value.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+const sectionPattern = /^\s*(\d+\.\d+)\s+(.+?)\s*$/;
+
+function prepareMarkdown(source, chapter) {
+  const declared = new Map(chapter.sections);
+  return source.split("\n").map((line) => {
+    const match = line.match(sectionPattern);
+    if (!match || !declared.has(match[1])) return line;
+    return `### ${match[1]} ${declared.get(match[1])}`;
+  }).join("\n");
+}
 
 async function copyChapterAssets(chapter, sourceFile) {
   const sourceDirectory = sourceFile.slice(0, -3);
@@ -57,39 +41,39 @@ async function copyChapterAssets(chapter, sourceFile) {
   await mkdir(destination, { recursive: true });
   const mappings = new Map();
   const entries = await readdir(sourceDirectory, { withFileTypes: true });
-  const images = entries.filter((entry) => entry.isFile() && /\.(png|jpe?g|webp)$/i.test(entry.name)).sort((a, b) => a.name.localeCompare(b.name, "en", { numeric: true }));
+  const images = entries.filter((entry) => entry.isFile() && /\.png$/i.test(entry.name)).sort((a, b) => a.name.localeCompare(b.name, "en", { numeric: true }));
   for (const [index, entry] of images.entries()) {
-    const extension = path.extname(entry.name).toLowerCase();
-    const name = `${String(index + 1).padStart(2, "0")}-${slugify(path.basename(entry.name, extension)) || "image"}${extension}`;
+    const name = `${String(index + 1).padStart(2, "0")}-${slugify(path.basename(entry.name, ".png")) || "image"}.png`;
     const source = path.join(sourceDirectory, entry.name);
-    const href = `/notes/computer-organization/assets/${chapter.slug}/${name}`;
     await copyFile(source, path.join(destination, name));
-    mappings.set(path.resolve(source), href);
+    mappings.set(path.resolve(source), `/notes/computer-organization/assets/${chapter.slug}/${name}`);
   }
   return mappings;
 }
 
-function nodeData(node, lines, mappings) {
-  const markdown = Number.isInteger(node.startLine) ? lines.slice(node.startLine - 1, node.endLine).join("\n") : "";
-  const rewritten = rewriteMarkdownImages(markdown, mappings, sourceRoot);
-  const tags = [];
-  if (/\$[^$]+\$/.test(markdown)) tags.push("FORMULA");
-  if (/!\[[^\]]*\]\([^)]+\)/.test(markdown)) tags.push("IMAGE");
-  return {
-    id: node.id,
-    title: node.title,
-    hasDetail: Boolean(markdown.trim()),
-    detailHtml: markdown.trim() ? renderMarkdown(rewritten) : "",
-    tags,
-    children: (node.children ?? []).map((child) => nodeData(child, lines, mappings)),
-  };
+function headings(markdown) {
+  const used = new Set();
+  return [...markdown.matchAll(/^#{2,4}\s+(.+)$/gm)].map((match, index) => {
+    const text = match[1].replace(/[*_`]/g, "").trim();
+    const base = slugify(text) || `section-${index + 1}`;
+    let id = base; let suffix = 2;
+    while (used.has(id)) id = `${base}-${suffix++}`;
+    used.add(id); return { text, id };
+  });
 }
 
-function chapterPage(chapter, tree) {
-  const fallback = tree.children.map((node) => `<button class="mind-map-node mind-map-node--section" type="button" data-node-id="${node.id}" aria-expanded="false">${escapeHtml(node.title)}</button>`).join("");
-  const data = JSON.stringify(tree).replaceAll("<", "\\u003c");
-  const content = `<header class="notes-hero mind-map-hero"><p class="collection-page-index">${String(chapter.number).padStart(2, "0")} / COMPUTER ORGANIZATION</p><h1>${escapeHtml(chapter.title)}</h1><p>Explore the chapter as an expandable mind map.</p></header><section class="mind-map" aria-label="${escapeHtml(chapter.title)} mind map"><div class="mind-map-toolbar" aria-label="Mind map controls"><button type="button" aria-label="Zoom out">−</button><button type="button" aria-label="Zoom in">+</button><button type="button" aria-label="Reset mind map">Reset</button><button type="button" aria-label="Collapse all branches">Collapse all</button></div><div class="mind-map-viewport" tabindex="0"><svg class="mind-map-connectors" aria-hidden="true"></svg><div class="mind-map-world"><div class="mind-map-nodes"><button class="mind-map-node mind-map-node--root" type="button" data-node-id="root" aria-expanded="true">${escapeHtml(chapter.title)}</button>${fallback}</div></div><p class="mind-map-fallback">Interactive expansion requires JavaScript.</p></div><script type="application/json" id="mind-map-data">${data}</script></section>`;
-  return notesShell({ title: `${chapter.title} — Computer Organization`, description: `${chapter.title} mind map by Vangie.`, content, bodyClass: "notes-site mind-map-page", scripts: ["/assets/js/mind-map.js"] });
+function addHeadingIds(html, items) {
+  let index = 0;
+  return html.replace(/<h([2-4])>(.*?)<\/h\1>/g, (full, level, text) => `<h${level} id="${items[index++]?.id ?? slugify(text)}">${text}</h${level}>`);
+}
+
+function toc(items) {
+  return `<nav class="notes-toc" aria-label="On this page"><p>ON THIS PAGE</p><ol>${items.map(({ text, id }) => `<li><a href="#${id}">${escapeHtml(text)}</a></li>`).join("")}</ol></nav>`;
+}
+
+function chapterPage(chapter, body, items) {
+  const content = `<header class="notes-hero"><p class="collection-page-index">${String(chapter.number).padStart(2, "0")} / COMPUTER ORGANIZATION</p><h1>${escapeHtml(chapter.title)}</h1><p>${escapeHtml(chapter.chineseTitle)} · structured course notes.</p></header><div class="notes-layout">${toc(items)}<article class="markdown-body">${body}</article></div>`;
+  return notesShell({ title: `${chapter.title} — Computer Organization`, description: `${chapter.title} notes by Vangie.`, content });
 }
 
 export async function buildComputerOrganization() {
@@ -97,17 +81,19 @@ export async function buildComputerOrganization() {
   await mkdir(outputRoot, { recursive: true });
   const built = [];
   for (const chapter of computerOrganizationChapters) {
-    const { file, source } = await loadChapter(chapter);
-    const mappings = await copyChapterAssets(chapter, file);
-    const lines = source.split("\n");
-    const tree = { id: "root", title: chapter.title, hasDetail: false, detailHtml: "", tags: [], children: chapter.nodes.map((node) => nodeData(node, lines, mappings)) };
+    const sourceFile = await chapterSourcePath(chapter);
+    const mappings = await copyChapterAssets(chapter, sourceFile);
+    const markdown = prepareMarkdown(await readFile(sourceFile, "utf8"), chapter);
+    const rewritten = rewriteMarkdownImages(markdown, mappings, sourceRoot);
+    const items = headings(rewritten);
+    const body = addHeadingIds(renderMarkdown(rewritten), items);
     const destination = path.join(outputRoot, chapter.slug);
     await mkdir(destination, { recursive: true });
-    await writeFile(path.join(destination, "index.html"), chapterPage(chapter, tree), "utf8");
-    built.push(chapter);
+    await writeFile(path.join(destination, "index.html"), chapterPage(chapter, body, items), "utf8");
+    built.push({ ...chapter, sections: items.length });
   }
-  const rows = built.map((chapter) => `<a class="notes-chapter" href="/notes/computer-organization/${chapter.slug}/"><span class="notes-number">${String(chapter.number).padStart(2, "0")}</span><span><b>${escapeHtml(chapter.title)}</b><small>Interactive mind map</small></span><span class="notes-arrow" aria-hidden="true">→</span></a>`).join("");
-  const content = `<header class="notes-hero"><p class="collection-page-index">02 / NOTES / COMPUTER ORGANIZATION</p><h1>Computer Organization</h1><p>Six chapters presented as progressively expandable mind maps.</p></header><section class="notes-chapters" aria-label="Computer Organization chapters"><p class="notes-kicker">CHAPTERS</p>${rows}</section>`;
+  const rows = built.map((chapter) => `<a class="notes-chapter" href="/notes/computer-organization/${chapter.slug}/"><span class="notes-number">${String(chapter.number).padStart(2, "0")}</span><span><b>${escapeHtml(chapter.title)}</b><small>${escapeHtml(chapter.chineseTitle)} · ${chapter.sections} sections</small></span><span class="notes-arrow" aria-hidden="true">→</span></a>`).join("");
+  const content = `<header class="notes-hero"><p class="collection-page-index">02 / NOTES / COMPUTER ORGANIZATION</p><h1>Computer Organization</h1><p>A structured set of notes on data, memory, instructions, processors, buses, and I/O.</p><div class="notes-stats"><span><b>${built.length}</b> chapters</span><span><b>${built.reduce((sum, chapter) => sum + chapter.sections, 0)}</b> sections</span><span><b>Markdown</b> source</span></div></header><section class="notes-chapters" aria-label="Computer Organization chapters"><p class="notes-kicker">CHAPTERS</p>${rows}</section>`;
   await writeFile(path.join(outputRoot, "index.html"), notesShell({ title: "Computer Organization", description: "Computer Organization notes by Vangie.", content }), "utf8");
-  console.log(`Built ${built.length} Computer Organization mind maps at notes/computer-organization/`);
+  console.log(`Built ${built.length} Computer Organization articles at notes/computer-organization/`);
 }

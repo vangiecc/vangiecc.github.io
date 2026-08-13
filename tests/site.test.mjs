@@ -57,16 +57,6 @@ test("critical CSS tokens and accessibility rules exist", async () => {
   assert.match(css, /34px/);
 });
 
-test("mind map CSS defines a spatial canvas and accessible detail surfaces", async () => {
-  const css = await read("assets/css/site.css");
-  assert.match(css, /\.mind-map-viewport\s*\{[^}]*overflow:\s*hidden/s);
-  assert.match(css, /\.mind-map-node\s*\{[^}]*left:\s*calc\(/s);
-  assert.match(css, /\.mind-map-detail\s*\{[^}]*overflow-y:\s*auto/s);
-  assert.match(css, /touch-action:\s*none/);
-  assert.match(css, /@media\s*\(prefers-reduced-motion:\s*reduce\)/);
-  assert.match(css, /\.mind-map-ready\s+\.mind-map-fallback/);
-});
-
 test("home contains the approved hero, readout, and collection copy", async () => {
   const html = await read("index.html");
 

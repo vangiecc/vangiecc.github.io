@@ -1,1 +1,235 @@
-<!doctype html><html lang="en" data-theme="dark"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>存储系统 — Computer Organization — Vangie</title><meta name="description" content="存储系统 mind map by Vangie."><script>try{const s=localStorage.getItem('vangie-theme');const l=matchMedia('(prefers-color-scheme: light)').matches;document.documentElement.dataset.theme=s==='dark'||s==='light'?s:l?'light':'dark'}catch(_){}</script><link rel="stylesheet" href="/assets/css/site.css"><link rel="stylesheet" href="/assets/vendor/katex/katex.min.css"><script type="module" src="/assets/js/theme.js"></script><script type="module" src="/assets/js/mind-map.js"></script></head><body class="collection-page collection-page--notes notes-site mind-map-page"><header class="site-header"><div class="header-inner wrap wrap--wide"><a class="brand" href="/" aria-label="Vangie home"><span class="brand-mark" aria-hidden="true"></span><span>Vangie</span></a><nav class="site-nav" aria-label="Primary"><a href="/blog/"><span class="nav-index">01</span>Blog</a><a href="/notes/" aria-current="page"><span class="nav-index">02</span>Notes</a><a href="/research/"><span class="nav-index">03</span>Research</a></nav><button class="theme-toggle" type="button" aria-label="Switch to light theme" title="Switch to light theme"><span class="theme-icon theme-icon--sun" aria-hidden="true">☼</span><span class="theme-icon theme-icon--moon" aria-hidden="true">◐</span></button></div></header><main class="site-main notes-main wrap page-enter"><header class="notes-hero mind-map-hero"><p class="collection-page-index">03 / COMPUTER ORGANIZATION</p><h1>存储系统</h1><p>Explore the chapter as an expandable mind map.</p></header><section class="mind-map" aria-label="存储系统 mind map"><div class="mind-map-toolbar" aria-label="Mind map controls"><button type="button" aria-label="Zoom out">−</button><button type="button" aria-label="Zoom in">+</button><button type="button" aria-label="Reset mind map">Reset</button><button type="button" aria-label="Collapse all branches">Collapse all</button></div><div class="mind-map-viewport" tabindex="0"><svg class="mind-map-connectors" aria-hidden="true"></svg><div class="mind-map-world"><div class="mind-map-nodes"><button class="mind-map-node mind-map-node--root" type="button" data-node-id="root" aria-expanded="true">存储系统</button><button class="mind-map-node mind-map-node--section" type="button" data-node-id="3-1" aria-expanded="false">3.1 存储系统概述</button><button class="mind-map-node mind-map-node--section" type="button" data-node-id="3-2" aria-expanded="false">3.2 主存储器</button><button class="mind-map-node mind-map-node--section" type="button" data-node-id="3-4" aria-expanded="false">3.4 外部存储器</button><button class="mind-map-node mind-map-node--section" type="button" data-node-id="3-5" aria-expanded="false">3.5 高速缓冲存储器</button></div></div><p class="mind-map-fallback">Interactive expansion requires JavaScript.</p></div><script type="application/json" id="mind-map-data">{"id":"root","title":"存储系统","hasDetail":false,"detailHtml":"","tags":[],"children":[{"id":"3-1","title":"3.1 存储系统概述","hasDetail":false,"detailHtml":"","tags":[],"children":[{"id":"3-1-hierarchy","title":"存储系统层次","hasDetail":true,"detailHtml":"\u003cp>3.1 存储系统概述\u003c/p>\n\u003cp>\u003cimg src=\"/notes/computer-organization/assets/memory-systems/11-image.png\" alt=\"image.png\">\u003c/p>\n\u003cp>主存→辅存\u003c/p>\n\u003cp>解决容量不够的问题\u003c/p>\n\u003cp>Cache→主存\u003c/p>\n\u003cp>解决主存和CPU速度不匹配的问题\u003c/p>\n","tags":["IMAGE"],"children":[]},{"id":"3-1-classification","title":"存储器的分类","hasDetail":true,"detailHtml":"\u003cp>存储器的分类\u003c/p>\n\u003cp>层次\u003c/p>\n\u003cp>高速缓存(Cache)\u003c/p>\n\u003cp>主存储器(主存、内存)\u003c/p>\n\u003cp>辅存存储器(辅存、外存)\u003c/p>\n\u003cp>存储介质\u003c/p>\n\u003cp>半导体\u003c/p>\n\u003cp>主存、Cache\u003c/p>\n\u003cp>磁性材料\u003c/p>\n\u003cp>磁盘、磁带\u003c/p>\n\u003cp>光介质\u003c/p>\n\u003cp>光存储器\u003c/p>\n\u003cp>存取方式\u003c/p>\n\u003cp>相联存储器(CAM)\u003c/p>\n\u003cp>按内容访问\u003c/p>\n\u003cp>随机存取存储器(RAM)\u003c/p>\n\u003cp>与物理地址无关\u003c/p>\n\u003cp>串行访问存储器\u003c/p>\n\u003cp>顺序存储器(SAM)\u003c/p>\n\u003cp>读写时间取决于物理位置\u003c/p>\n\u003cp>直接存取存储器(DAM)\u003c/p>\n\u003cp>直接选取信息所在区域，然后按顺序方式存取\u003c/p>\n\u003cp>信息的可更改性\u003c/p>\n\u003cp>读写存储器\u003c/p>\n\u003cp>eg.磁盘、内存、Cache\u003c/p>\n\u003cp>只读存储器\u003c/p>\n\u003cp>eg.CD-ROM\u003c/p>\n\u003cp>eg.BIOS通常写在ROM中\u003c/p>\n\u003cp>信息的可保存性\u003c/p>\n\u003cp>易失性\u003c/p>\n\u003cp>eg.主存、Cache\u003c/p>\n\u003cp>非易失性\u003c/p>\n\u003cp>eg.磁盘、光盘\u003c/p>\n\u003cp>破坏性读出\u003c/p>\n\u003cp>DRAM芯片、读出数据后要进行重写\u003c/p>\n\u003cp>非破坏性读出\u003c/p>\n\u003cp>SRAM芯片、磁盘、光盘\u003c/p>\n","tags":[],"children":[]},{"id":"3-1-indicators","title":"磁盘的性能指标","hasDetail":true,"detailHtml":"\u003cp>磁盘的性能指标\u003c/p>\n\u003cp>存储容量\u003c/p>\n\u003cp>存储字数×字长\u003c/p>\n\u003cp>单位成本\u003c/p>\n\u003cp>每位价格=总成本/总容量\u003c/p>\n\u003cp>存储速度\u003c/p>\n\u003cp>数据传输率（主存带宽）=数据的宽度/存储周期\u003c/p>\n\u003cp>\u003cimg src=\"/notes/computer-organization/assets/memory-systems/01-image-1.png\" alt=\"image.png\">\u003c/p>\n","tags":["IMAGE"],"children":[]}]},{"id":"3-2","title":"3.2 主存储器","hasDetail":false,"detailHtml":"","tags":[],"children":[{"id":"3-2-basics","title":"基本组成","hasDetail":true,"detailHtml":"\u003cp>3.2 主存储器\u003c/p>\n\u003cp>基本组成\u003c/p>\n\u003cp>基本元件\u003c/p>\n\u003cp>\u003cimg src=\"/notes/computer-organization/assets/memory-systems/02-image-2.png\" alt=\"image.png\">\u003c/p>\n\u003cp>寻址\u003c/p>\n\u003cp>现代计算机通常按字节编址，每个字节对应一个地址\u003c/p>\n\u003cp>按字节寻址、按字寻址、按半字寻址、按双字寻址\u003c/p>\n\u003cp>存储芯片的结构\u003c/p>\n\u003cp>译码驱动电路\u003c/p>\n\u003cp>存储矩阵\u003c/p>\n\u003cp>读写电路\u003c/p>\n\u003cp>地址线、数据线、片选线、读写控制线\u003c/p>\n","tags":["IMAGE"],"children":[]},{"id":"3-2-ram","title":"SRAM 和 DRAM","hasDetail":true,"detailHtml":"\u003cp>SRAM和DRAM\u003c/p>\n\u003cp>DRAM\u003c/p>\n\u003cp>用于主存\u003c/p>\n\u003cp>存储元：栅极电容\u003c/p>\n\u003cp>\u003cimg src=\"/notes/computer-organization/assets/memory-systems/03-image-3.png\" alt=\"image.png\">\u003c/p>\n\u003cp>只能维持2ms\u003c/p>\n\u003cp>需要刷新\u003c/p>\n\u003cp>分散刷新：每次读写完都刷新一行\u003c/p>\n\u003cp>集中刷新：2ms内集中安排全部刷新\u003c/p>\n\u003cp>异步刷新：2ms内每行刷新1次\u003c/p>\n\u003cp>地址线复用技术\u003c/p>\n\u003cp>行、列地址分两次送\u003c/p>\n\u003cp>可使地址线更少、芯片引脚更少\u003c/p>\n\u003cp>SRAM\u003c/p>\n\u003cp>用于Cache\u003c/p>\n\u003cp>存储元：双稳态触发器\u003c/p>\n\u003cp>\u003cimg src=\"/notes/computer-organization/assets/memory-systems/04-image-4.png\" alt=\"image.png\">\u003c/p>\n\u003cp>只要不断电，触发器状态就不会改变\u003c/p>\n\u003cp>对比\u003c/p>\n\u003cp>\u003cimg src=\"/notes/computer-organization/assets/memory-systems/05-image-5.png\" alt=\"image.png\">\u003c/p>\n","tags":["IMAGE"],"children":[]},{"id":"3-2-rom","title":"只读存储器 ROM","hasDetail":true,"detailHtml":"\u003cp>只读存储器ROM\u003c/p>\n\u003cp>MROM 掩模只读存储器\u003c/p>\n\u003cp>PROM 可编程只读存储器\u003c/p>\n\u003cp>RPROM 可擦除可编程只读存储器\u003c/p>\n\u003cp>UVEPROM UV可擦除只读存储器\u003c/p>\n\u003cp>EEPROM 电擦除只读存储器\u003c/p>\n\u003cp>Flash Memory 闪速存储器\u003c/p>\n\u003cp>SSD 固态硬盘\u003c/p>\n","tags":[],"children":[]},{"id":"3-2-optimization","title":"内存优化技术","hasDetail":true,"detailHtml":"\u003cp>内存优化技术\u003c/p>\n\u003cp>多核CPU都要访存怎么办？\u003c/p>\n\u003cp>双端口RAM\u003c/p>\n\u003cp>\u003cimg src=\"/notes/computer-organization/assets/memory-systems/06-image-6.png\" alt=\"image.png\">\u003c/p>\n\u003cp>CPU的读写速度比主存快很多，主存恢复太慢怎么办？\u003c/p>\n\u003cp>多模块存储器\u003c/p>\n\u003cp>单体多字存储器\u003c/p>\n\u003cp>多体并行存储器\u003c/p>\n\u003cp>高位交叉\u003c/p>\n\u003cp>\u003cimg src=\"/notes/computer-organization/assets/memory-systems/07-image-7.png\" alt=\"image.png\">\u003c/p>\n\u003cp>低位交叉\u003c/p>\n\u003cp>\u003cimg src=\"/notes/computer-organization/assets/memory-systems/08-image-8.png\" alt=\"image.png\">\u003c/p>\n\u003cp>\u003cimg src=\"/notes/computer-organization/assets/memory-systems/09-image-9.png\" alt=\"image.png\">\u003c/p>\n","tags":["IMAGE"],"children":[]},{"id":"3-2-cpu","title":"主存储器与 CPU 的连接","hasDetail":true,"detailHtml":"\u003cp>主存储器与CPU的连接\u003c/p>\n\u003cp>位扩展\u003c/p>\n\u003cp>增加主存的存储字长\u003c/p>\n\u003cp>\u003cimg src=\"/notes/computer-organization/assets/memory-systems/10-image-10.png\" alt=\"image.png\">\u003c/p>\n\u003cp>字扩展\u003c/p>\n\u003cp>增加主存的存储字数\u003c/p>\n\u003cp>线选法\u003c/p>\n\u003cp>n条线→n个选片信号\u003c/p>\n\u003cp>地址空间不连续\u003c/p>\n\u003cp>译码片选法\u003c/p>\n\u003cp>n条线→\u003cspan class=\"math-inline\">\u003cspan class=\"katex\">\u003cspan class=\"katex-mathml\">\u003cmath xmlns=\"http://www.w3.org/1998/Math/MathML\">\u003csemantics>\u003cmrow>\u003cmsup>\u003cmn>2\u003c/mn>\u003cmi>n\u003c/mi>\u003c/msup>\u003c/mrow>\u003cannotation encoding=\"application/x-tex\">2^n\u003c/annotation>\u003c/semantics>\u003c/math>\u003c/span>\u003cspan class=\"katex-html\" aria-hidden=\"true\">\u003cspan class=\"katex-base\">\u003cspan class=\"katex-strut\" style=\"height:0.6644em;\">\u003c/span>\u003cspan class=\"mord\">\u003cspan class=\"mord\">2\u003c/span>\u003cspan class=\"msupsub\">\u003cspan class=\"vlist-t\">\u003cspan class=\"vlist-r\">\u003cspan class=\"vlist\" style=\"height:0.6644em;\">\u003cspan style=\"top:-3.063em;margin-right:0.05em;\">\u003cspan class=\"pstrut\" style=\"height:2.7em;\">\u003c/span>\u003cspan class=\"katex-sizing reset-size6 size3 mtight\">\u003cspan class=\"mord mathnormal mtight\">n\u003c/span>\u003c/span>\u003c/span>\u003c/span>\u003c/span>\u003c/span>\u003c/span>\u003c/span>\u003c/span>\u003c/span>\u003c/span>\u003c/span>个选片信号\u003c/p>\n\u003cp>地址空间可连续\u003c/p>\n\u003cp>字位同时扩展\u003c/p>\n","tags":["FORMULA","IMAGE"],"children":[]}]},{"id":"3-4","title":"3.4 外部存储器","hasDetail":false,"detailHtml":"","tags":[],"children":[{"id":"3-4-disk","title":"磁盘存储器","hasDetail":true,"detailHtml":"\u003cp>3.4 外部存储器\u003c/p>\n\u003cp>磁盘存储器\u003c/p>\n\u003cp>优点\u003c/p>\n\u003cp>存储容量大，位价格低\u003c/p>\n\u003cp>记录介质可以重复使用\u003c/p>\n\u003cp>记录信息长期不丢失\u003c/p>\n\u003cp>非破坏性读出\u003c/p>\n\u003cp>缺点\u003c/p>\n\u003cp>存取速度慢\u003c/p>\n\u003cp>机械结构复杂\u003c/p>\n\u003cp>对工作环境要求高\u003c/p>\n\u003cp>组成\u003c/p>\n\u003cp>存储区域\u003c/p>\n\u003cp>磁头数\u003c/p>\n\u003cp>柱面数\u003c/p>\n\u003cp>扇区数\u003c/p>\n\u003cp>磁盘驱动器\u003c/p>\n\u003cp>磁盘控制器\u003c/p>\n\u003cp>性能指标\u003c/p>\n\u003cp>容量\u003c/p>\n\u003cp>存储的字节总数\u003c/p>\n\u003cp>非格式化容量\u003c/p>\n\u003cp>记录面数×柱面数×每条磁道的磁化单元数\u003c/p>\n\u003cp>格式化容量\u003c/p>\n\u003cp>记录面数×柱面数×每道扇区数×每个扇区的容量\u003c/p>\n\u003cp>记录密度\u003c/p>\n\u003cp>道密度\u003c/p>\n\u003cp>位密度\u003c/p>\n\u003cp>位密度×道密度\u003c/p>\n\u003cp>平均存取时间\u003c/p>\n\u003cp>寻道时间\u003c/p>\n\u003cp>旋转时间\u003c/p>\n\u003cp>传输时间\u003c/p>\n\u003cp>数据传输率\u003c/p>\n\u003cp>单位时间内向主机传送数据的字节数\u003c/p>\n\u003cp>磁盘地址\u003c/p>\n\u003cp>驱动器号\u003c/p>\n\u003cp>柱面号（磁道号）\u003c/p>\n\u003cp>盘面号\u003c/p>\n\u003cp>扇区号\u003c/p>\n","tags":[],"children":[]},{"id":"3-4-raid","title":"磁盘阵列 RAID","hasDetail":true,"detailHtml":"\u003cp>磁盘阵列RAID\u003c/p>\n\u003cp>RAID0\u003c/p>\n\u003cp>无冗余和无校验\u003c/p>\n\u003cp>RAID1\u003c/p>\n\u003cp>镜像\u003c/p>\n\u003cp>RAID2\u003c/p>\n\u003cp>纠错的海明码\u003c/p>\n\u003cp>RAID3\u003c/p>\n\u003cp>位交叉奇偶校验\u003c/p>\n\u003cp>RAID4\u003c/p>\n\u003cp>块交叉奇偶校验\u003c/p>\n\u003cp>RAID5\u003c/p>\n\u003cp>无独立校验的奇偶校验\u003c/p>\n","tags":[],"children":[]},{"id":"3-4-ssd","title":"固态硬盘","hasDetail":true,"detailHtml":"\u003cp>固态硬盘\u003c/p>\n\u003cp>原理：Flash Memory\u003c/p>\n\u003cp>组成\u003c/p>\n\u003cp>闪存翻译层\u003c/p>\n\u003cp>存储介质\u003c/p>\n\u003cp>多个闪存芯片\u003c/p>\n\u003cp>读写性能特性\u003c/p>\n\u003cp>以页为单位读写\u003c/p>\n\u003cp>相当于磁盘的扇区\u003c/p>\n\u003cp>以块为单位擦除\u003c/p>\n\u003cp>支持随机访问\u003c/p>\n\u003cp>读快、写慢\u003c/p>\n\u003cp>与机械硬盘相比\u003c/p>\n\u003cp>SSD读写速度快，随机访问性能高\u003c/p>\n\u003cp>SSD安静无噪音、耐摔抗震、能耗低、造价更贵\u003c/p>\n\u003cp>SSD一个块被擦除次数过多可能会坏掉\u003c/p>\n\u003cp>磨损均衡技术\u003c/p>\n\u003cp>将擦除平均分布在各个块上\u003c/p>\n\u003cp>动态磨损均衡\u003c/p>\n\u003cp>写入时优先选择累计擦除次数少的新闪存块\u003c/p>\n\u003cp>静态磨损均衡\u003c/p>\n\u003cp>SSD监测并自动进行数据分配迁移\u003c/p>\n","tags":[],"children":[]}]},{"id":"3-5","title":"3.5 高速缓冲存储器","hasDetail":false,"detailHtml":"","tags":[],"children":[{"id":"3-5-locality","title":"局部性原理","hasDetail":true,"detailHtml":"\u003cp>3.5 高速缓冲存储器\u003c/p>\n\u003cp>局部性原理\u003c/p>\n\u003cp>空间局部性\u003c/p>\n\u003cp>最近要用到的信息，很可能与现在正在使用的信息在存储空间上是相邻的\u003c/p>\n\u003cp>时间局部性\u003c/p>\n\u003cp>最近要用到的信息很可能是现在正在使用的\u003c/p>\n","tags":[],"children":[]},{"id":"3-5-principle","title":"基本工作原理","hasDetail":true,"detailHtml":"\u003cp>基本工作原理\u003c/p>\n\u003cp>数据查找\u003c/p>\n\u003cp>地址映射\u003c/p>\n\u003cp>替换策略\u003c/p>\n\u003cp>写入策略\u003c/p>\n","tags":[],"children":[]},{"id":"3-5-mapping","title":"Cache 和主存的映射方式","hasDetail":true,"detailHtml":"\u003cp>Cache和主存的映射方式\u003c/p>\n\u003cp>直接映射\u003c/p>\n\u003cp>主存块号 mod Cache总行数\u003c/p>\n\u003cp>全相联映射\u003c/p>\n\u003cp>可以装入任何位置\u003c/p>\n\u003cp>组相联映射\u003c/p>\n\u003cp>主存块号 mod Cache组数\u003c/p>\n","tags":[],"children":[]},{"id":"3-5-replacement","title":"Cache 替换算法","hasDetail":true,"detailHtml":"\u003cp>Cache替换算法\u003c/p>\n\u003cp>随机算法RAND\u003c/p>\n\u003cp>先进先出算法FIFO\u003c/p>\n\u003cp>近期最少使用LRU\u003c/p>\n\u003cp>命中时，命中行的计数器清零，比其低的计数器+1，其余不变\u003c/p>\n\u003cp>未命中还有空闲行，新装入的行计数器置0，其余非空闲行全+1\u003c/p>\n\u003cp>未命中且无空闲行时，计数值最大的行的信息块被淘汰，新装行的块的计数器置0，其余全部+1\u003c/p>\n\u003cp>最近不经常使用LFU\u003c/p>\n\u003cp>新调入的块计数器=0，之后每被访问一次计数器+1。需要替换时，选择计数器最小的一行\u003c/p>\n\u003cp>曾经经常访问的块，在未来不一定会用到\u003c/p>\n","tags":[],"children":[]},{"id":"3-5-write","title":"Cache 写策略","hasDetail":true,"detailHtml":"\u003cp>Cache写策略\u003c/p>\n\u003cp>写命中\u003c/p>\n\u003cp>\u003cstrong>全写法\u003c/strong>\u003c/p>\n\u003cp>对Cache写命中时，必须把数据同时写入Cache\u003c/p>\n\u003cp>\u003cstrong>回写法\u003c/strong>\u003c/p>\n\u003cp>只修改Cache内容，只有当此块被换出时才写回主存\u003c/p>\n\u003cp>写不命中\u003c/p>\n\u003cp>\u003cstrong>写分配法\u003c/strong>\u003c/p>\n\u003cp>写不命中时，把主存中的块调入Cache,在Cache中修改\u003c/p>\n\u003cp>\u003cstrong>非写分配法\u003c/strong>\u003c/p>\n\u003cp>写不命中时，只写入主存，不调入Cache\u003c/p>\n","tags":[],"children":[]},{"id":"3-5-levels","title":"多级 Cache","hasDetail":true,"detailHtml":"\u003cp>多级Cache\u003c/p>\n\u003cp>各级之间 全写+非写分配\u003c/p>\n\u003cp>Cache和主存 写回法+写分配法\u003c/p>\n","tags":[],"children":[]}]}]}</script></section></main><footer class="site-footer"><div class="footer-inner wrap"><p>© 2026 Vangie</p></div></footer></body></html>
+<!doctype html><html lang="en" data-theme="dark"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Memory Systems — Computer Organization — Vangie</title><meta name="description" content="Memory Systems notes by Vangie."><script>try{const s=localStorage.getItem('vangie-theme');const l=matchMedia('(prefers-color-scheme: light)').matches;document.documentElement.dataset.theme=s==='dark'||s==='light'?s:l?'light':'dark'}catch(_){}</script><link rel="stylesheet" href="/assets/css/site.css"><link rel="stylesheet" href="/assets/vendor/katex/katex.min.css"><script type="module" src="/assets/js/theme.js"></script></head><body class="collection-page collection-page--notes notes-site"><header class="site-header"><div class="header-inner wrap wrap--wide"><a class="brand" href="/" aria-label="Vangie home"><span class="brand-mark" aria-hidden="true"></span><span>Vangie</span></a><nav class="site-nav" aria-label="Primary"><a href="/blog/"><span class="nav-index">01</span>Blog</a><a href="/notes/" aria-current="page"><span class="nav-index">02</span>Notes</a><a href="/research/"><span class="nav-index">03</span>Research</a></nav><button class="theme-toggle" type="button" aria-label="Switch to light theme" title="Switch to light theme"><span class="theme-icon theme-icon--sun" aria-hidden="true">☼</span><span class="theme-icon theme-icon--moon" aria-hidden="true">◐</span></button></div></header><main class="site-main notes-main wrap page-enter"><header class="notes-hero"><p class="collection-page-index">03 / COMPUTER ORGANIZATION</p><h1>Memory Systems</h1><p>存储系统 · structured course notes.</p></header><div class="notes-layout"><nav class="notes-toc" aria-label="On this page"><p>ON THIS PAGE</p><ol><li><a href="#3-1">3.1 存储系统概述</a></li><li><a href="#3-2">3.2 主存储器</a></li><li><a href="#3-4">3.4 外部存储器</a></li><li><a href="#3-5">3.5 高速缓冲存储器</a></li></ol></nav><article class="markdown-body"><h3 id="3-1">3.1 存储系统概述</h3>
+<p><img src="/notes/computer-organization/assets/memory-systems/11-image.png" alt="image.png"></p>
+<p>主存→辅存</p>
+<p>解决容量不够的问题</p>
+<p>Cache→主存</p>
+<p>解决主存和CPU速度不匹配的问题</p>
+<p>存储器的分类</p>
+<p>层次</p>
+<p>高速缓存(Cache)</p>
+<p>主存储器(主存、内存)</p>
+<p>辅存存储器(辅存、外存)</p>
+<p>存储介质</p>
+<p>半导体</p>
+<p>主存、Cache</p>
+<p>磁性材料</p>
+<p>磁盘、磁带</p>
+<p>光介质</p>
+<p>光存储器</p>
+<p>存取方式</p>
+<p>相联存储器(CAM)</p>
+<p>按内容访问</p>
+<p>随机存取存储器(RAM)</p>
+<p>与物理地址无关</p>
+<p>串行访问存储器</p>
+<p>顺序存储器(SAM)</p>
+<p>读写时间取决于物理位置</p>
+<p>直接存取存储器(DAM)</p>
+<p>直接选取信息所在区域，然后按顺序方式存取</p>
+<p>信息的可更改性</p>
+<p>读写存储器</p>
+<p>eg.磁盘、内存、Cache</p>
+<p>只读存储器</p>
+<p>eg.CD-ROM</p>
+<p>eg.BIOS通常写在ROM中</p>
+<p>信息的可保存性</p>
+<p>易失性</p>
+<p>eg.主存、Cache</p>
+<p>非易失性</p>
+<p>eg.磁盘、光盘</p>
+<p>破坏性读出</p>
+<p>DRAM芯片、读出数据后要进行重写</p>
+<p>非破坏性读出</p>
+<p>SRAM芯片、磁盘、光盘</p>
+<p>磁盘的性能指标</p>
+<p>存储容量</p>
+<p>存储字数×字长</p>
+<p>单位成本</p>
+<p>每位价格=总成本/总容量</p>
+<p>存储速度</p>
+<p>数据传输率（主存带宽）=数据的宽度/存储周期</p>
+<p><img src="/notes/computer-organization/assets/memory-systems/01-image-1.png" alt="image.png"></p>
+<h3 id="3-2">3.2 主存储器</h3>
+<p>基本组成</p>
+<p>基本元件</p>
+<p><img src="/notes/computer-organization/assets/memory-systems/02-image-2.png" alt="image.png"></p>
+<p>寻址</p>
+<p>现代计算机通常按字节编址，每个字节对应一个地址</p>
+<p>按字节寻址、按字寻址、按半字寻址、按双字寻址</p>
+<p>存储芯片的结构</p>
+<p>译码驱动电路</p>
+<p>存储矩阵</p>
+<p>读写电路</p>
+<p>地址线、数据线、片选线、读写控制线</p>
+<p>SRAM和DRAM</p>
+<p>DRAM</p>
+<p>用于主存</p>
+<p>存储元：栅极电容</p>
+<p><img src="/notes/computer-organization/assets/memory-systems/03-image-3.png" alt="image.png"></p>
+<p>只能维持2ms</p>
+<p>需要刷新</p>
+<p>分散刷新：每次读写完都刷新一行</p>
+<p>集中刷新：2ms内集中安排全部刷新</p>
+<p>异步刷新：2ms内每行刷新1次</p>
+<p>地址线复用技术</p>
+<p>行、列地址分两次送</p>
+<p>可使地址线更少、芯片引脚更少</p>
+<p>SRAM</p>
+<p>用于Cache</p>
+<p>存储元：双稳态触发器</p>
+<p><img src="/notes/computer-organization/assets/memory-systems/04-image-4.png" alt="image.png"></p>
+<p>只要不断电，触发器状态就不会改变</p>
+<p>对比</p>
+<p><img src="/notes/computer-organization/assets/memory-systems/05-image-5.png" alt="image.png"></p>
+<p>只读存储器ROM</p>
+<p>MROM 掩模只读存储器</p>
+<p>PROM 可编程只读存储器</p>
+<p>RPROM 可擦除可编程只读存储器</p>
+<p>UVEPROM UV可擦除只读存储器</p>
+<p>EEPROM 电擦除只读存储器</p>
+<p>Flash Memory 闪速存储器</p>
+<p>SSD 固态硬盘</p>
+<p>内存优化技术</p>
+<p>多核CPU都要访存怎么办？</p>
+<p>双端口RAM</p>
+<p><img src="/notes/computer-organization/assets/memory-systems/06-image-6.png" alt="image.png"></p>
+<p>CPU的读写速度比主存快很多，主存恢复太慢怎么办？</p>
+<p>多模块存储器</p>
+<p>单体多字存储器</p>
+<p>多体并行存储器</p>
+<p>高位交叉</p>
+<p><img src="/notes/computer-organization/assets/memory-systems/07-image-7.png" alt="image.png"></p>
+<p>低位交叉</p>
+<p><img src="/notes/computer-organization/assets/memory-systems/08-image-8.png" alt="image.png"></p>
+<p><img src="/notes/computer-organization/assets/memory-systems/09-image-9.png" alt="image.png"></p>
+<p>主存储器与CPU的连接</p>
+<p>位扩展</p>
+<p>增加主存的存储字长</p>
+<p><img src="/notes/computer-organization/assets/memory-systems/10-image-10.png" alt="image.png"></p>
+<p>字扩展</p>
+<p>增加主存的存储字数</p>
+<p>线选法</p>
+<p>n条线→n个选片信号</p>
+<p>地址空间不连续</p>
+<p>译码片选法</p>
+<p>n条线→<span class="math-inline"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mn>2</mn><mi>n</mi></msup></mrow><annotation encoding="application/x-tex">2^n</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6644em;"></span><span class="mord"><span class="mord">2</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.6644em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">n</span></span></span></span></span></span></span></span></span></span></span></span>个选片信号</p>
+<p>地址空间可连续</p>
+<p>字位同时扩展</p>
+<h3 id="3-4">3.4 外部存储器</h3>
+<p>磁盘存储器</p>
+<p>优点</p>
+<p>存储容量大，位价格低</p>
+<p>记录介质可以重复使用</p>
+<p>记录信息长期不丢失</p>
+<p>非破坏性读出</p>
+<p>缺点</p>
+<p>存取速度慢</p>
+<p>机械结构复杂</p>
+<p>对工作环境要求高</p>
+<p>组成</p>
+<p>存储区域</p>
+<p>磁头数</p>
+<p>柱面数</p>
+<p>扇区数</p>
+<p>磁盘驱动器</p>
+<p>磁盘控制器</p>
+<p>性能指标</p>
+<p>容量</p>
+<p>存储的字节总数</p>
+<p>非格式化容量</p>
+<p>记录面数×柱面数×每条磁道的磁化单元数</p>
+<p>格式化容量</p>
+<p>记录面数×柱面数×每道扇区数×每个扇区的容量</p>
+<p>记录密度</p>
+<p>道密度</p>
+<p>位密度</p>
+<p>位密度×道密度</p>
+<p>平均存取时间</p>
+<p>寻道时间</p>
+<p>旋转时间</p>
+<p>传输时间</p>
+<p>数据传输率</p>
+<p>单位时间内向主机传送数据的字节数</p>
+<p>磁盘地址</p>
+<p>驱动器号</p>
+<p>柱面号（磁道号）</p>
+<p>盘面号</p>
+<p>扇区号</p>
+<p>磁盘阵列RAID</p>
+<p>RAID0</p>
+<p>无冗余和无校验</p>
+<p>RAID1</p>
+<p>镜像</p>
+<p>RAID2</p>
+<p>纠错的海明码</p>
+<p>RAID3</p>
+<p>位交叉奇偶校验</p>
+<p>RAID4</p>
+<p>块交叉奇偶校验</p>
+<p>RAID5</p>
+<p>无独立校验的奇偶校验</p>
+<p>固态硬盘</p>
+<p>原理：Flash Memory</p>
+<p>组成</p>
+<p>闪存翻译层</p>
+<p>存储介质</p>
+<p>多个闪存芯片</p>
+<p>读写性能特性</p>
+<p>以页为单位读写</p>
+<p>相当于磁盘的扇区</p>
+<p>以块为单位擦除</p>
+<p>支持随机访问</p>
+<p>读快、写慢</p>
+<p>与机械硬盘相比</p>
+<p>SSD读写速度快，随机访问性能高</p>
+<p>SSD安静无噪音、耐摔抗震、能耗低、造价更贵</p>
+<p>SSD一个块被擦除次数过多可能会坏掉</p>
+<p>磨损均衡技术</p>
+<p>将擦除平均分布在各个块上</p>
+<p>动态磨损均衡</p>
+<p>写入时优先选择累计擦除次数少的新闪存块</p>
+<p>静态磨损均衡</p>
+<p>SSD监测并自动进行数据分配迁移</p>
+<h3 id="3-5">3.5 高速缓冲存储器</h3>
+<p>局部性原理</p>
+<p>空间局部性</p>
+<p>最近要用到的信息，很可能与现在正在使用的信息在存储空间上是相邻的</p>
+<p>时间局部性</p>
+<p>最近要用到的信息很可能是现在正在使用的</p>
+<p>基本工作原理</p>
+<p>数据查找</p>
+<p>地址映射</p>
+<p>替换策略</p>
+<p>写入策略</p>
+<p>Cache和主存的映射方式</p>
+<p>直接映射</p>
+<p>主存块号 mod Cache总行数</p>
+<p>全相联映射</p>
+<p>可以装入任何位置</p>
+<p>组相联映射</p>
+<p>主存块号 mod Cache组数</p>
+<p>Cache替换算法</p>
+<p>随机算法RAND</p>
+<p>先进先出算法FIFO</p>
+<p>近期最少使用LRU</p>
+<p>命中时，命中行的计数器清零，比其低的计数器+1，其余不变</p>
+<p>未命中还有空闲行，新装入的行计数器置0，其余非空闲行全+1</p>
+<p>未命中且无空闲行时，计数值最大的行的信息块被淘汰，新装行的块的计数器置0，其余全部+1</p>
+<p>最近不经常使用LFU</p>
+<p>新调入的块计数器=0，之后每被访问一次计数器+1。需要替换时，选择计数器最小的一行</p>
+<p>曾经经常访问的块，在未来不一定会用到</p>
+<p>Cache写策略</p>
+<p>写命中</p>
+<p><strong>全写法</strong></p>
+<p>对Cache写命中时，必须把数据同时写入Cache</p>
+<p><strong>回写法</strong></p>
+<p>只修改Cache内容，只有当此块被换出时才写回主存</p>
+<p>写不命中</p>
+<p><strong>写分配法</strong></p>
+<p>写不命中时，把主存中的块调入Cache,在Cache中修改</p>
+<p><strong>非写分配法</strong></p>
+<p>写不命中时，只写入主存，不调入Cache</p>
+<p>多级Cache</p>
+<p>各级之间 全写+非写分配</p>
+<p>Cache和主存 写回法+写分配法</p>
+</article></div></main><footer class="site-footer"><div class="footer-inner wrap"><p>© 2026 Vangie</p></div></footer></body></html>
