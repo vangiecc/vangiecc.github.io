@@ -96,6 +96,41 @@
 
           <h2 id="experimental-results">Experimental Results</h2>
           <h3>Automated diagnostic consistency</h3>
+          <section class="research-visuals" aria-label="Visual summary of MemEval experimental results">
+            <figure class="research-chart">
+              <figcaption>
+                <strong>Stage-level attribution holds up better than subtype diagnosis.</strong>
+                <span>one tick = one percentage point · ink marks automated agreement with expert labels · LoCoMo evaluation</span>
+              </figcaption>
+              <svg id="diagnosis-agreement-chart" viewBox="0 0 400 260" role="img" aria-labelledby="diagnosis-agreement-title diagnosis-agreement-desc" preserveAspectRatio="xMidYMid meet">
+                <title id="diagnosis-agreement-title">Diagnostic agreement between automated and expert diagnosis</title>
+                <desc id="diagnosis-agreement-desc">Exact Match is 76.04 percent and Stage Match is 81.62 percent.</desc>
+              </svg>
+              <p class="research-chart-source">TICK ROWS · LIEFLAT BASICS · MEMEVAL RESULTS</p>
+            </figure>
+            <figure class="research-chart research-chart--wide">
+              <figcaption>
+                <strong>Temporal and single-hop questions are easier to place at the right stage.</strong>
+                <span>paired ladders by question category · faint = Exact Match · ink = Stage Match · one rung = one percentage point</span>
+              </figcaption>
+              <svg id="category-consistency-chart" viewBox="0 0 560 290" role="img" aria-labelledby="category-consistency-title category-consistency-desc" preserveAspectRatio="xMidYMid meet">
+                <title id="category-consistency-title">Diagnostic consistency by LoCoMo question category</title>
+                <desc id="category-consistency-desc">Temporal reaches 87.54 percent Stage Match, Single-hop reaches 83.59 percent, Multi-hop reaches 72.34 percent, and Open-domain reaches 71.88 percent.</desc>
+              </svg>
+              <p class="research-chart-source">PAIRED RUNGS · LIEFLAT BASICS · MEMEVAL RESULTS</p>
+            </figure>
+            <figure class="research-chart">
+              <figcaption>
+                <strong>Larger base models improve QA accuracy only modestly.</strong>
+                <span>one rung = one percentage point · sorted by model scale · mem0 on LoCoMo</span>
+              </figcaption>
+              <svg id="model-scaling-chart" viewBox="0 0 400 260" role="img" aria-labelledby="model-scaling-title model-scaling-desc" preserveAspectRatio="xMidYMid meet">
+                <title id="model-scaling-title">End-to-end QA accuracy for mem0 by base model</title>
+                <desc id="model-scaling-desc">GPT-4.1-mini scores 50.39 percent, GPT-4o-mini scores 50.71 percent, Qwen3.5-35B scores 57.40 percent, and Qwen3.5-122B scores 58.31 percent.</desc>
+              </svg>
+              <p class="research-chart-source">RUNG BARS · LIEFLAT BASICS · MEMEVAL RESULTS</p>
+            </figure>
+          </section>
           <table>
             <caption>Agreement between automated and expert diagnosis</caption>
             <thead><tr><th>Measure</th><th>Agreement</th><th>Interpretation</th></tr></thead>
@@ -167,5 +202,285 @@
       </div>
     </main>
     <footer class="site-footer"><div class="footer-inner wrap"><p>© 2026 Vangie</p></div></footer>
+    <script>
+      (() => {
+        const ns = "http://www.w3.org/2000/svg";
+        const ink = "var(--ink)";
+        const muted = "var(--ink-3)";
+        const grid = "var(--line-2)";
+        const accent = "var(--research)";
+        const rnd = (i, k) => Math.abs(((i * 73856093) ^ (k * 19349663)) % 1000) / 1000;
+        const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+        const make = (parent, tag, attrs = {}) => {
+          const node = document.createElementNS(ns, tag);
+          for (const [key, value] of Object.entries(attrs)) node.setAttribute(key, value);
+          parent.appendChild(node);
+          return node;
+        };
+        const label = (parent, attrs, text) => {
+          const node = make(parent, "text", attrs);
+          node.textContent = text;
+          return node;
+        };
+        const tooltip = (node, text) => {
+          const title = document.createElementNS(ns, "title");
+          title.textContent = text;
+          node.appendChild(title);
+        };
+        const clearSvg = (svg) => {
+          [...svg.children].forEach((child) => {
+            if (!["title", "desc"].includes(child.tagName)) child.remove();
+          });
+        };
+        const reveal = (id, render) => {
+          const svg = document.getElementById(id);
+          if (!svg) return;
+          const run = () => {
+            clearSvg(svg);
+            render(svg);
+          };
+          svg.addEventListener("click", run);
+          svg.style.cursor = "pointer";
+          if (prefersReduced || !("IntersectionObserver" in window)) {
+            run();
+            return;
+          }
+          const observer = new IntersectionObserver((entries) => {
+            if (entries[0].isIntersecting) {
+              run();
+              observer.disconnect();
+            }
+          }, { threshold: 0.3 });
+          observer.observe(svg);
+        };
+        const tickRows = (svg, data, maxValue) => {
+          const x0 = 122;
+          const tick = 2.48;
+          const y0 = 74;
+          data.forEach(({ label: name, value, focal }, i) => {
+            const y = y0 + i * 66;
+            label(svg, {
+              x: 112,
+              y: y + 3,
+              "font-size": 9,
+              "font-weight": 700,
+              fill: muted,
+              "text-anchor": "end",
+              "letter-spacing": ".07em",
+              class: "research-chart-fade",
+              style: `animation-delay:${i * 80}ms`,
+            }, name.toUpperCase());
+            make(svg, "line", {
+              x1: x0,
+              y1: y + 9,
+              x2: x0 + maxValue * tick,
+              y2: y + 9,
+              stroke: grid,
+              "stroke-width": 0.9,
+              class: "research-chart-fade",
+            });
+            for (let k = 0; k < Math.round(value); k += 1) {
+              const x = x0 + k * tick + tick / 2;
+              const height = 8 + rnd(k + 1, i + 2) * 8;
+              const stroke = focal ? accent : ink;
+              make(svg, "line", {
+                x1: x,
+                y1: y + 9,
+                x2: x,
+                y2: y + 9 - height,
+                stroke,
+                "stroke-width": 0.85,
+                opacity: focal ? 1 : 0.58 + rnd(k + 3, i + 5) * 0.34,
+                class: "research-chart-fade",
+                style: `animation-delay:${i * 80 + k * 6}ms`,
+              });
+              if (k % 10 === 9) make(svg, "circle", {
+                cx: x,
+                cy: y + 14,
+                r: 0.8,
+                fill: muted,
+                opacity: 0.45,
+                class: "research-chart-fade",
+              });
+            }
+            const valueLabel = label(svg, {
+              x: x0 + value * tick + 11,
+              y: y + 4,
+              "font-size": 13,
+              "font-weight": 800,
+              fill: focal ? accent : ink,
+              class: "research-chart-fade",
+              style: `animation-delay:${320 + i * 80}ms`,
+            }, `${value.toFixed(2)}%`);
+            tooltip(valueLabel, `${name}: ${value.toFixed(2)}%`);
+          });
+          label(svg, {
+            x: 200,
+            y: 232,
+            "font-size": 7,
+            "font-weight": 600,
+            fill: muted,
+            "text-anchor": "middle",
+            "letter-spacing": ".12em",
+            class: "research-chart-fade",
+          }, "ONE TICK = ONE PERCENTAGE POINT · DOT MARKS EVERY TENTH");
+        };
+        const pairedRungs = (svg, data) => {
+          const base = 236;
+          const step = 2.1;
+          const halfWidth = 10;
+          data.forEach(({ label: name, exact, stage }, i) => {
+            const x = 80 + i * 126;
+            const xa = x - 14;
+            const xb = x + 14;
+            for (let k = 0; k < Math.round(exact); k += 1) {
+              const y = base - k * step;
+              const width = halfWidth - 1.2 + rnd(k + 1, i + 2) * 2.4;
+              make(svg, "line", {
+                x1: xa - width,
+                y1: y,
+                x2: xa + width,
+                y2: y,
+                stroke: muted,
+                "stroke-width": 0.9,
+                opacity: 0.42 + rnd(k + 2, i + 3) * 0.32,
+                class: "research-chart-fade",
+                style: `animation-delay:${i * 80 + k * 4}ms`,
+              });
+            }
+            for (let k = 0; k < Math.round(stage); k += 1) {
+              const y = base - k * step;
+              const width = halfWidth - 1.2 + rnd(k + 1, i + 7) * 2.4;
+              make(svg, "line", {
+                x1: xb - width,
+                y1: y,
+                x2: xb + width,
+                y2: y,
+                stroke: stage > 86 ? accent : ink,
+                "stroke-width": 0.9,
+                opacity: stage > 86 ? 0.96 : 0.58 + rnd(k + 2, i + 8) * 0.34,
+                class: "research-chart-fade",
+                style: `animation-delay:${120 + i * 80 + k * 4}ms`,
+              });
+            }
+            label(svg, {
+              x: xa,
+              y: base - exact * step - 8,
+              "font-size": 8,
+              "font-weight": 700,
+              fill: muted,
+              "text-anchor": "middle",
+              class: "research-chart-fade",
+            }, exact.toFixed(2));
+            const stageLabel = label(svg, {
+              x: xb,
+              y: base - stage * step - 10,
+              "font-size": 10,
+              "font-weight": 800,
+              fill: stage > 86 ? accent : ink,
+              "text-anchor": "middle",
+              class: "research-chart-fade",
+            }, stage.toFixed(2));
+            tooltip(stageLabel, `${name}: Exact ${exact.toFixed(2)}%, Stage ${stage.toFixed(2)}%`);
+            label(svg, {
+              x,
+              y: base + 20,
+              "font-size": 7.5,
+              "font-weight": 700,
+              fill: muted,
+              "text-anchor": "middle",
+              "letter-spacing": ".07em",
+              class: "research-chart-fade",
+            }, name.toUpperCase());
+          });
+          make(svg, "line", { x1: 42, y1: base + 4, x2: 522, y2: base + 4, stroke: grid, "stroke-width": 0.8, class: "research-chart-fade" });
+          label(svg, {
+            x: 280,
+            y: 278,
+            "font-size": 7,
+            "font-weight": 600,
+            fill: muted,
+            "text-anchor": "middle",
+            "letter-spacing": ".12em",
+            class: "research-chart-fade",
+          }, "FAINT = EXACT MATCH · INK = STAGE MATCH · ACCENT = HIGHEST STAGE MATCH");
+        };
+        const rungBars = (svg, data) => {
+          const base = 214;
+          const step = 2.8;
+          const halfWidth = 14;
+          data.forEach(({ label: name, value, focal }, i) => {
+            const x = 54 + i * 92;
+            for (let k = 0; k < Math.round(value); k += 1) {
+              const y = base - k * step;
+              const width = halfWidth - 1.6 + rnd(k + 1, i + 2) * 3.2;
+              make(svg, "line", {
+                x1: x - width,
+                y1: y,
+                x2: x + width,
+                y2: y,
+                stroke: focal ? accent : ink,
+                "stroke-width": 0.95,
+                opacity: focal ? 0.98 : 0.55 + rnd(k + 2, i + 3) * 0.34,
+                class: "research-chart-fade",
+                style: `animation-delay:${i * 80 + k * 5}ms`,
+              });
+            }
+            const top = base - value * step;
+            const valueLabel = label(svg, {
+              x,
+              y: top - 11,
+              "font-size": 11,
+              "font-weight": 800,
+              fill: focal ? accent : ink,
+              "text-anchor": "middle",
+              class: "research-chart-fade",
+            }, `${value.toFixed(2)}%`);
+            tooltip(valueLabel, `${name}: ${value.toFixed(2)}% QA accuracy`);
+            const words = name.split(" ");
+            words.forEach((word, j) => label(svg, {
+              x,
+              y: base + 18 + j * 10,
+              "font-size": 7,
+              "font-weight": 700,
+              fill: muted,
+              "text-anchor": "middle",
+              "letter-spacing": ".04em",
+              class: "research-chart-fade",
+            }, word.toUpperCase()));
+          });
+          make(svg, "line", { x1: 26, y1: base + 4, x2: 374, y2: base + 4, stroke: grid, "stroke-width": 0.8, class: "research-chart-fade" });
+          label(svg, {
+            x: 200,
+            y: 250,
+            "font-size": 7,
+            "font-weight": 600,
+            fill: muted,
+            "text-anchor": "middle",
+            "letter-spacing": ".12em",
+            class: "research-chart-fade",
+          }, "ONE RUNG = ONE PERCENTAGE POINT · ACCENT = BEST OBSERVED ACCURACY");
+        };
+        window.renderResearchCharts = () => {
+          reveal("diagnosis-agreement-chart", (svg) => tickRows(svg, [
+            { label: "Exact Match", value: 76.04 },
+            { label: "Stage Match", value: 81.62, focal: true },
+          ], 100));
+          reveal("category-consistency-chart", (svg) => pairedRungs(svg, [
+            { label: "Multi-hop", exact: 68.44, stage: 72.34 },
+            { label: "Temporal", exact: 77.88, stage: 87.54 },
+            { label: "Open-domain", exact: 66.67, stage: 71.88 },
+            { label: "Single-hop", exact: 78.95, stage: 83.59 },
+          ]));
+          reveal("model-scaling-chart", (svg) => rungBars(svg, [
+            { label: "GPT-4.1 mini", value: 50.39 },
+            { label: "GPT-4o mini", value: 50.71 },
+            { label: "Qwen3.5 35B", value: 57.40 },
+            { label: "Qwen3.5 122B", value: 58.31, focal: true },
+          ]));
+        };
+        window.renderResearchCharts();
+      })();
+    </script>
   </body>
 </html>

@@ -191,6 +191,26 @@ test("completed memory research has an accessible English detail page", async ()
   assert.doesNotMatch(html, /\.pdf["?#]|<embed|<iframe|<object/i);
 });
 
+test("completed memory research presents Lieflat-style result visuals alongside tables", async () => {
+  const html = await read("research/chain-of-stage-diagnosis/index.html");
+  const css = await read("assets/css/site.css");
+
+  assert.match(html, /class="research-visuals"/);
+  assert.equal((html.match(/<figure class="[^"]*\bresearch-chart\b/g) ?? []).length, 3);
+  for (const id of ["diagnosis-agreement-chart", "category-consistency-chart", "model-scaling-chart"]) {
+    assert.match(html, new RegExp(`<svg[^>]+id="${id}"`));
+  }
+  for (const template of ["TICK ROWS", "PAIRED RUNGS", "RUNG BARS"]) {
+    assert.match(html, new RegExp(`${template} · LIEFLAT BASICS · MEMEVAL RESULTS`));
+  }
+  for (const result of ["76.04%", "81.62%", "87.54%", "58.31%"]) {
+    assert.ok(html.includes(result), `missing visualized result ${result}`);
+  }
+  assert.match(html, /renderResearchCharts/);
+  assert.match(css, /\.research-visuals\s*\{/);
+  assert.match(css, /@media\s*\(max-width:\s*720px\)/);
+});
+
 test("the private research PDF is excluded from the published tree", async () => {
   await assert.rejects(stat(path.join(root, "research/Chain_of_stage_diagnosis.pdf")), { code: "ENOENT" });
   const ignore = await read(".gitignore");
