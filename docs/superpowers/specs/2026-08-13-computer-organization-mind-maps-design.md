@@ -2,7 +2,7 @@
 
 ## Purpose
 
-Publish Vangie's exported notes for **计算机组成原理 / Computer Organization** as one interactive mind map per chapter. The maps must preserve the source material while replacing conventional long-form chapter pages with a spatial, progressively disclosed knowledge structure.
+Publish Vangie's exported notes for **Computer Organization** as one interactive mind map per chapter. The maps must preserve the source material while replacing conventional long-form chapter pages with a spatial, progressively disclosed knowledge structure.
 
 ## Scope
 
@@ -151,7 +151,7 @@ Interaction tests exercise expand, collapse, open detail, close detail, zoom, re
 
 ## Acceptance Criteria
 
-1. `/notes/` links to `Computer Organization`, labeled as `计算机组成原理` where the Chinese course name is shown.
+1. `/notes/` and the course pages use `Computer Organization` as the sole course name; no parallel Chinese course label is displayed.
 2. The course index exposes exactly the six selected chapters in order.
 3. Each chapter route presents one interactive mind map and no conventional chapter article below it.
 4. Initial state shows only the chapter root and major numbered sections.
