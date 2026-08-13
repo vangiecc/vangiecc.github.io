@@ -6,6 +6,7 @@ const world = section?.querySelector(".mind-map-world");
 const data = JSON.parse(document.querySelector("#mind-map-data")?.textContent ?? "null");
 
 if (section && viewport && world && data) {
+  document.documentElement.classList.add("mind-map-ready");
   let state = createMapState(data);
   let drag = null;
   const visible = (node) => [node, ...(state.expanded.has(node.id) ? (node.children ?? []).flatMap(visible) : [])];
