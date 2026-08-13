@@ -84,6 +84,24 @@ function rewriteImages(markdown, mappings) {
   });
 }
 
+function normalizeExportIndentation(markdown) {
+  return markdown.split("\n").map((line) => {
+    const match = line.match(/^( +)(.*)$/);
+    if (!match) return line;
+    const [, indentation, content] = match;
+    if (!content) return "";
+
+    // Notion exports every block with four-space indentation. Keep one
+    // indentation level for nested lists, but don't let prose become code.
+    if (/^(?:[-*+]\s+|\d+[.)]\s+)/.test(content)) {
+      // Exported indentation describes the source tree rather than Markdown
+      // list nesting. Flatten it here so list items are parsed as lists.
+      return content;
+    }
+    return content;
+  }).join("\n");
+}
+
 function addHeadingIds(html, items) {
   let index = 0;
   return html.replace(/<h([2-4])>(.*?)<\/h\1>/g, (full, level, text) => `<h${level} id="${items[index++]?.id ?? slugify(text) ?? "section"}">${text}</h${level}>`);
@@ -92,7 +110,7 @@ function addHeadingIds(html, items) {
 async function buildChapter(chapter) {
   const sourceFile = await chapterEntry(chapter);
   const sourceDir = await chapterEntry(chapter, true);
-  const markdown = (await readFile(sourceFile, "utf8")).replace(/^ {4}/gm, "");
+  const markdown = normalizeExportIndentation(await readFile(sourceFile, "utf8"));
   const { mappings, attachments } = await copyAssets(sourceDir, chapter);
   const rewritten = rewriteImages(markdown, mappings);
   const items = headings(rewritten);

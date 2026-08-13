@@ -197,6 +197,13 @@ test("notes build emits the operating systems archive", async () => {
   assert.match(chapter, /On this page/);
   assert.match(chapter, /临界区/);
 
+  const fileChapter = await read("notes/operating-systems/file-management/index.html");
+  assert.match(fileChapter, /为使链接父目录D5/);
+  assert.match(fileChapter, /<strong>优点：<\/strong>/);
+  assert.match(fileChapter, /<ul>\s*<li><p>当其他用户去读共享文件/);
+  assert.match(fileChapter, /<blockquote>\s*<p>建立硬链接时/);
+  assert.doesNotMatch(fileChapter, /<pre><code>\s*为使链接父目录D5/);
+
   const chapterRoutes = [
     "introduction",
     "process-management",
