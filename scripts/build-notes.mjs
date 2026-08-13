@@ -3,6 +3,8 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { marked } from "marked";
 import katex from "katex";
+import { copyKatexAssets as copySharedKatexAssets, renderMarkdown } from "./notes/render-markdown.mjs";
+import { notesShell } from "./notes/site-shell.mjs";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const sourceBook = path.join(root, "notes", "OS+7dcefccb-df9f-49d", "OS+7dcefccb-df9f-49d7-970b-0c30f28a9df2");
@@ -41,9 +43,7 @@ async function collectFiles(directory) {
 }
 
 function shell({ title, content }) {
-  const nav = [["01", "Blog", "/blog/"], ["02", "Notes", "/notes/"], ["03", "Research", "/research/"]]
-    .map(([number, label, href]) => `<a href="${href}"${label === "Notes" ? ' aria-current="page"' : ""}><span class="nav-index">${number}</span>${label}</a>`).join("");
-  return `<!doctype html><html lang="en" data-theme="dark"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>${escapeHtml(title)} — Vangie</title><meta name="description" content="Operating systems notes by Vangie."><script>try{const s=localStorage.getItem('vangie-theme');const l=matchMedia('(prefers-color-scheme: light)').matches;document.documentElement.dataset.theme=s==='dark'||s==='light'?s:l?'light':'dark'}catch(_){}</script><link rel="stylesheet" href="/assets/css/site.css"><link rel="stylesheet" href="/assets/vendor/katex/katex.min.css"><script type="module" src="/assets/js/theme.js"></script></head><body class="collection-page collection-page--notes notes-site"><header class="site-header"><div class="header-inner wrap wrap--wide"><a class="brand" href="/" aria-label="Vangie home"><span class="brand-mark" aria-hidden="true"></span><span>Vangie</span></a><nav class="site-nav" aria-label="Primary">${nav}</nav><button class="theme-toggle" type="button" aria-label="Switch to light theme" title="Switch to light theme"><span class="theme-icon theme-icon--sun" aria-hidden="true">☼</span><span class="theme-icon theme-icon--moon" aria-hidden="true">◐</span></button></div></header><main class="site-main notes-main wrap page-enter">${content}</main><footer class="site-footer"><div class="footer-inner wrap"><p>© 2026 Vangie</p></div></footer></body></html>`;
+  return notesShell({ title, description: "Operating systems notes by Vangie.", content });
 }
 
 function renderMath(markdown) {
@@ -149,8 +149,7 @@ async function buildChapter(chapter) {
   const { mappings, attachments } = await copyAssets(sourceDir, chapter);
   const rewritten = rewriteImages(markdown, mappings);
   const items = headings(rewritten);
-  const math = renderMath(rewritten);
-  const body = restoreMath(addHeadingIds(marked.parse(math.markdown), items), math.tokens);
+  const body = addHeadingIds(renderMarkdown(rewritten), items);
   const materials = attachments.length ? `<section class="notes-materials"><p class="notes-kicker">MATERIALS</p><div>${attachments.map(({ name, href, type }) => `<a href="${href}" target="_blank" rel="noreferrer"><span>${type}</span>${escapeHtml(name)}</a>`).join("")}</div></section>` : "";
   const content = `<header class="notes-hero"><p class="collection-page-index">${String(chapter.index).padStart(2, "0")} / OPERATING SYSTEMS</p><h1>${escapeHtml(chapter.title)}</h1><p>${escapeHtml(chapter.chineseTitle)} · structured course notes, definitions, algorithms, and review questions.</p></header><div class="notes-layout">${toc(items)}<article class="markdown-body">${body}</article></div>${materials}`;
   await mkdir(path.join(outputRoot, chapter.slug), { recursive: true });
@@ -166,7 +165,7 @@ async function buildIndex(results) {
 
 await rm(outputRoot, { recursive: true, force: true });
 await mkdir(outputRoot, { recursive: true });
-await copyKatexAssets();
+await copySharedKatexAssets(root);
 const results = [];
 for (const chapter of chapters) results.push(await buildChapter(chapter));
 await buildIndex(results);
