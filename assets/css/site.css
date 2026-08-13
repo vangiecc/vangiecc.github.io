@@ -743,3 +743,341 @@ button {
     transition-duration: 0.01ms !important;
   }
 }
+
+.notes-main {
+  padding-bottom: 130px;
+}
+
+.notes-hero {
+  padding-block: 100px 72px;
+}
+
+.notes-hero h1 {
+  max-width: 16ch;
+  margin-top: 22px;
+  font-family: var(--serif);
+  font-size: 4.8rem;
+  font-weight: 400;
+  line-height: 0.96;
+}
+
+.notes-hero > p:not(.collection-page-index) {
+  max-width: 66ch;
+  margin-top: 26px;
+  color: var(--ink-2);
+  font-size: 1.16rem;
+}
+
+.notes-stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 28px;
+  margin-top: 34px;
+  color: var(--ink-3);
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  text-transform: uppercase;
+}
+
+.notes-stats b {
+  margin-right: 6px;
+  color: var(--notes);
+  font-size: 1rem;
+}
+
+.notes-kicker {
+  color: var(--notes);
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.notes-chapters {
+  border-top: 1px solid var(--line-2);
+}
+
+.notes-chapters > .notes-kicker {
+  padding-block: 22px;
+}
+
+.notes-chapter {
+  display: grid;
+  min-height: 110px;
+  grid-template-columns: 62px minmax(0, 1fr) auto;
+  gap: 22px;
+  align-items: center;
+  padding: 24px 4px;
+  border-top: 1px solid var(--line);
+  transition: background-color 160ms ease, padding 160ms ease;
+}
+
+.notes-chapter:hover,
+.notes-chapter:focus-visible {
+  padding-inline: 16px;
+  background: var(--surface);
+}
+
+.notes-number {
+  align-self: start;
+  padding-top: 4px;
+  color: var(--notes);
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.16em;
+}
+
+.notes-chapter b {
+  display: block;
+  font-family: var(--serif);
+  font-size: 2rem;
+  font-weight: 400;
+  line-height: 1;
+}
+
+.notes-chapter small {
+  display: block;
+  margin-top: 10px;
+  color: var(--ink-3);
+  font-size: 0.9rem;
+}
+
+.notes-arrow {
+  color: var(--notes);
+  font-family: var(--mono);
+  font-size: 1.1rem;
+  transition: transform 160ms ease;
+}
+
+.notes-chapter:hover .notes-arrow,
+.notes-chapter:focus-visible .notes-arrow {
+  transform: translateX(4px);
+}
+
+.notes-layout {
+  display: grid;
+  grid-template-columns: minmax(190px, 0.28fr) minmax(0, 0.72fr);
+  gap: clamp(36px, 8vw, 110px);
+  align-items: start;
+}
+
+.notes-toc {
+  position: sticky;
+  top: 90px;
+  padding-block: 4px;
+  font-family: var(--mono);
+  font-size: 0.72rem;
+}
+
+.notes-toc > p {
+  color: var(--notes);
+  letter-spacing: 0.16em;
+}
+
+.notes-toc ol {
+  display: grid;
+  gap: 8px;
+  margin-top: 18px;
+  padding: 0;
+  list-style: none;
+}
+
+.notes-toc a {
+  color: var(--ink-3);
+}
+
+.notes-toc a:hover {
+  color: var(--ink);
+}
+
+.markdown-body {
+  min-width: 0;
+  color: var(--ink-2);
+  font-size: 1.02rem;
+  line-height: 1.78;
+}
+
+.markdown-body > :first-child {
+  margin-top: 0;
+}
+
+.markdown-body h2,
+.markdown-body h3,
+.markdown-body h4 {
+  scroll-margin-top: 92px;
+  margin-top: 2.6em;
+  margin-bottom: 0.7em;
+  color: var(--ink);
+  font-family: var(--serif);
+  font-weight: 400;
+  line-height: 1.08;
+}
+
+.markdown-body h2 { font-size: 2.35rem; }
+.markdown-body h3 { font-size: 1.8rem; }
+.markdown-body h4 { font-size: 1.4rem; }
+
+.markdown-body p,
+.markdown-body ul,
+.markdown-body ol,
+.markdown-body blockquote,
+.markdown-body pre,
+.markdown-body table {
+  margin-block: 1em;
+}
+
+.markdown-body ul,
+.markdown-body ol {
+  padding-left: 1.35em;
+}
+
+.markdown-body li + li {
+  margin-top: 0.35em;
+}
+
+.markdown-body strong {
+  color: var(--ink);
+  font-weight: 600;
+}
+
+.markdown-body blockquote {
+  padding: 12px 18px;
+  border-left: 2px solid var(--notes);
+  color: var(--ink);
+  background: var(--surface);
+}
+
+.markdown-body pre {
+  overflow-x: auto;
+  padding: 18px 20px;
+  border: 1px solid var(--line);
+  border-radius: 3px;
+  color: var(--ink);
+  background: var(--surface);
+  font-family: var(--mono);
+  font-size: 0.82rem;
+  line-height: 1.65;
+}
+
+.markdown-body code {
+  font-family: var(--mono);
+  font-size: 0.88em;
+}
+
+.markdown-body :not(pre) > code {
+  padding: 2px 5px;
+  color: var(--notes);
+  background: var(--surface-2);
+}
+
+.markdown-body img {
+  width: auto;
+  max-width: 100%;
+  height: auto;
+  margin: 24px auto;
+  border: 1px solid var(--line);
+}
+
+.markdown-body a {
+  color: var(--notes);
+  border-bottom: 1px solid color-mix(in srgb, var(--notes) 50%, transparent);
+}
+
+.markdown-body table {
+  display: block;
+  width: 100%;
+  overflow-x: auto;
+  border-collapse: collapse;
+  font-size: 0.86rem;
+}
+
+.markdown-body th,
+.markdown-body td {
+  min-width: 110px;
+  padding: 8px 10px;
+  border-bottom: 1px solid var(--line);
+  text-align: left;
+  white-space: nowrap;
+}
+
+.markdown-body th {
+  color: var(--ink-3);
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.notes-materials {
+  margin-top: 70px;
+  padding-top: 22px;
+  border-top: 1px solid var(--line-2);
+}
+
+.notes-materials > div {
+  display: grid;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.notes-materials a {
+  display: flex;
+  min-height: 40px;
+  align-items: center;
+  gap: 12px;
+  color: var(--ink-2);
+  font-family: var(--mono);
+  font-size: 0.76rem;
+}
+
+.notes-materials a:hover {
+  color: var(--notes);
+}
+
+.notes-materials a span {
+  color: var(--notes);
+  font-size: 0.66rem;
+  letter-spacing: 0.1em;
+}
+
+@media (max-width: 760px) {
+  .notes-hero {
+    padding-block: 74px 52px;
+  }
+
+  .notes-hero h1 {
+    font-size: 3.2rem;
+  }
+
+  .notes-layout {
+    grid-template-columns: 1fr;
+    gap: 26px;
+  }
+
+  .notes-toc {
+    position: static;
+    padding: 16px 0;
+    border-block: 1px solid var(--line);
+  }
+
+  .notes-toc ol {
+    display: flex;
+    overflow-x: auto;
+    gap: 18px;
+    padding-bottom: 4px;
+  }
+
+  .notes-toc li {
+    flex: 0 0 auto;
+  }
+
+  .notes-chapter {
+    grid-template-columns: 42px minmax(0, 1fr) auto;
+    gap: 12px;
+  }
+
+  .notes-chapter b {
+    font-size: 1.6rem;
+  }
+}

@@ -77,7 +77,7 @@ test("home contains the approved hero, readout, and collection copy", async () =
   ]) {
     assert.ok(html.includes(copy));
   }
-  assert.equal((html.match(/No entries yet\./g) ?? []).length, 4);
+  assert.equal((html.match(/No entries yet\./g) ?? []).length, 3);
 });
 
 test("home collection rows are native full-row links with text identities", async () => {
@@ -144,7 +144,7 @@ for (const collection of collections) {
     assert.ok(html.includes(collection.index));
     assert.ok(html.includes(collection.title));
     assert.ok(html.includes(collection.description));
-    assert.ok(html.includes("No entries yet."));
+    if (collection.route !== "/notes/") assert.ok(html.includes("No entries yet."));
     assert.equal((html.match(/<h1\b/g) ?? []).length, 1);
     assert.match(html, /href="\/assets\/css\/site\.css"/);
     assert.match(html, /type="module" src="\/assets\/js\/theme\.js"/);
@@ -178,4 +178,51 @@ test("documents contain no dead links or fabricated entries", async () => {
     assert.doesNotMatch(html, /href="#"/);
     assert.doesNotMatch(html, /example (article|post|note|project)/i);
   }
+});
+
+test("notes build emits the operating systems archive", async () => {
+  const { execFile } = await import("node:child_process");
+  const { promisify } = await import("node:util");
+  const run = promisify(execFile);
+
+  await run("npm", ["run", "build:notes"], { cwd: root });
+
+  const archive = await read("notes/operating-systems/index.html");
+  assert.match(archive, /OPERATING SYSTEMS/);
+  assert.match(archive, /<b>7<\/b> chapters/);
+  assert.match(archive, /href="\/notes\/operating-systems\/introduction\/"/);
+
+  const chapter = await read("notes/operating-systems/synchronization-and-deadlocks/index.html");
+  assert.match(chapter, /Synchronization &amp; Deadlocks|同步通信及死锁管理/);
+  assert.match(chapter, /On this page/);
+  assert.match(chapter, /临界区/);
+
+  const chapterRoutes = [
+    "introduction",
+    "process-management",
+    "synchronization-and-deadlocks",
+    "memory-management",
+    "device-management",
+    "file-management",
+    "evolution",
+  ];
+  for (const slug of chapterRoutes) {
+    const page = await read(`notes/operating-systems/${slug}/index.html`);
+    assert.match(page, /class="markdown-body"/);
+  }
+
+  const assetRoot = path.join(root, "notes", "operating-systems", "assets");
+  const assetFiles = await (async function walk(directory) {
+    const { readdir } = await import("node:fs/promises");
+    const files = [];
+    for (const entry of await readdir(directory, { withFileTypes: true })) {
+      const full = path.join(directory, entry.name);
+      if (entry.isDirectory()) files.push(...await walk(full));
+      else files.push(full);
+    }
+    return files;
+  })(assetRoot);
+  assert.equal(assetFiles.filter((file) => file.endsWith(".png")).length, 85);
+  assert.equal(assetFiles.filter((file) => file.endsWith(".csv")).length, 6);
+  assert.equal(assetFiles.filter((file) => file.endsWith(".pdf")).length, 2);
 });
