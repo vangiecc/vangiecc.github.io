@@ -239,69 +239,14 @@ test("documents contain no dead links or fabricated entries", async () => {
   }
 });
 
-test("notes build emits the operating systems archive", async () => {
-  const { execFile } = await import("node:child_process");
-  const { promisify } = await import("node:util");
-  const run = promisify(execFile);
+test("notes pages embed the FlowUs share views", async () => {
+  const os = await read("notes/operating-systems/index.html");
+  assert.match(os, /OPERATING SYSTEMS/);
+  assert.match(os, /<iframe src="https:\/\/flowus\.cn\/share\/7dcefccb-df9f-49d7-970b-0c30f28a9df2"/);
+  assert.match(os, /open the share page directly/);
 
-  await run("npm", ["run", "build:notes"], { cwd: root });
-
-  const archive = await read("notes/operating-systems/index.html");
-  assert.match(archive, /OPERATING SYSTEMS/);
-  assert.match(archive, /<b>7<\/b> chapters/);
-  assert.match(archive, /href="\/notes\/operating-systems\/introduction\/"/);
-
-  const chapter = await read("notes/operating-systems/synchronization-and-deadlocks/index.html");
-  assert.match(chapter, /Synchronization &amp; Deadlocks|同步通信及死锁管理/);
-  assert.match(chapter, /On this page/);
-  assert.match(chapter, /临界区/);
-
-  const fileChapter = await read("notes/operating-systems/file-management/index.html");
-  assert.match(fileChapter, /为使链接父目录D5/);
-  assert.match(fileChapter, /<strong>优点：<\/strong>/);
-  assert.match(fileChapter, /<ul>\s*<li><p>当其他用户去读共享文件/);
-  assert.match(fileChapter, /<blockquote>\s*<p>建立硬链接时/);
-  assert.doesNotMatch(fileChapter, /<pre><code>\s*为使链接父目录D5/);
-  assert.match(fileChapter, /class="math-display"/);
-  assert.match(fileChapter, /class="katex-display"/);
-  assert.doesNotMatch(fileChapter, /<p>\$i=\(b-1\) DIV n\+1\$<\/p>/);
-
-  const deadlocksChapter = await read("notes/operating-systems/synchronization-and-deadlocks/index.html");
-  assert.match(deadlocksChapter, /class="math-inline"/);
-  assert.match(deadlocksChapter, /class="katex"/);
-
-  const katexCss = await stat(path.join(root, "assets/vendor/katex/katex.min.css"));
-  const katexFont = await stat(path.join(root, "assets/vendor/katex/fonts/KaTeX_Main-Regular.woff2"));
-  assert.ok(katexCss.size > 1000, "KaTeX CSS is unexpectedly small");
-  assert.ok(katexFont.size > 1000, "KaTeX font is unexpectedly small");
-  assert.match(fileChapter, /href="\/assets\/vendor\/katex\/katex\.min\.css"/);
-
-  const chapterRoutes = [
-    "introduction",
-    "process-management",
-    "synchronization-and-deadlocks",
-    "memory-management",
-    "device-management",
-    "file-management",
-    "evolution",
-  ];
-  for (const slug of chapterRoutes) {
-    const page = await read(`notes/operating-systems/${slug}/index.html`);
-    assert.match(page, /class="markdown-body"/);
-  }
-
-  const assetRoot = path.join(root, "notes", "operating-systems", "assets");
-  const assetFiles = await (async function walk(directory) {
-    const { readdir } = await import("node:fs/promises");
-    const files = [];
-    for (const entry of await readdir(directory, { withFileTypes: true })) {
-      const full = path.join(directory, entry.name);
-      if (entry.isDirectory()) files.push(...await walk(full));
-      else files.push(full);
-    }
-    return files;
-  })(assetRoot);
-  assert.equal(assetFiles.filter((file) => file.endsWith(".png")).length, 85);
-  assert.equal(assetFiles.filter((file) => file.endsWith(".csv")).length, 6);
-  assert.equal(assetFiles.filter((file) => file.endsWith(".pdf")).length, 2);
+  const cs = await read("notes/computer-organization/index.html");
+  assert.match(cs, /COMPUTER ORGANIZATION/);
+  assert.match(cs, /<iframe src="https:\/\/flowus\.cn\/share\/755cf848-063d-44cd-8126-c4ead1ceeebf"/);
+  assert.match(cs, /open the share page directly/);
 });

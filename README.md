@@ -18,23 +18,17 @@ Open <http://127.0.0.1:8000/>.
 npm test
 ```
 
-## Build Notes
+## Notes
 
-The Operating Systems archive is generated from the exported Markdown under `notes/OS+7dcefccb-df9f-49d/`:
-
-```bash
-npm install
-npm run build:notes
-```
-
-This creates the publishable archive at `/notes/operating-systems/`, including seven chapter pages and copied image, CSV, and PDF resources. Edit the Markdown source, then run the build command again before publishing.
+Both study archives embed their original FlowUs share views directly — no build step is involved. Content updates happen in FlowUs and appear on the site automatically.
 
 ## Routes
 
 - `/` - home and archive index
 - `/blog/` - essays and viewpoints
 - `/notes/` - learning notes
-- `/notes/operating-systems/` - Operating Systems study archive
+- `/notes/operating-systems/` - Operating Systems notes (embedded FlowUs share)
+- `/notes/computer-organization/` - Computer Organization notes (embedded FlowUs share)
 - `/research/` - research progress
 
 The repository is a dependency-free static site and can be published directly with GitHub Pages.
