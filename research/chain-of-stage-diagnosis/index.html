@@ -16,10 +16,10 @@
         document.documentElement.dataset.theme = 'dark';
       }
     </script>
-    <link rel="stylesheet" href="/assets/css/site.css">
+    <link rel="stylesheet" href="/assets/css/site.css?v=20261006-8">
     <script type="module" src="/assets/js/theme.js"></script>
   </head>
-  <body class="collection-page collection-page--research research-detail">
+  <body class="collection-page collection-page--research research-detail memeval">
     <header class="site-header">
       <div class="header-inner wrap wrap--wide">
         <a class="brand" href="/" aria-label="Vangie home"><span class="brand-mark" aria-hidden="true"></span><span>Vangie</span></a>
@@ -34,52 +34,67 @@
         </button>
       </div>
     </header>
+    <nav class="memeval-subnav" aria-label="Sections">
+      <div class="memeval-subnav-inner wrap">
+        <a href="#motivation" class="active"><span>01</span>Motivation</a>
+        <a href="#method"><span>02</span>Method</a>
+        <a href="#results"><span>03</span>Results</a>
+        <a href="#insights"><span>04</span>Insights</a>
+      </div>
+    </nav>
     <main class="site-main notes-main wrap page-enter">
-      <header class="notes-hero research-hero">
-        <p class="collection-page-index">03 / RESEARCH / COMPLETED</p>
-        <h1>When Do Memories Break?</h1>
-        <p>Chain-of-Stage Diagnosis for LLM Memory Systems</p>
+      <header class="notes-hero memeval-hero">
+        <p class="collection-page-index">TECHNICAL REPORT · 2026 · COMPLETED</p>
+        <h1>When Do <span>Memories</span> Break?</h1>
+        <p class="memeval-subtitle">Chain-of-Stage Diagnosis for LLM Memory Systems</p>
         <div class="research-meta" aria-label="Project metadata">
           <span><b>STATUS</b> <strong>COMPLETED</strong></span>
           <span><b>FIELD</b> LLM MEMORY SYSTEMS</span>
           <span><b>YEAR</b> 2026</span>
         </div>
       </header>
-      <div class="notes-layout">
-        <nav class="notes-toc" aria-label="On this page">
-          <p>ON THIS PAGE</p>
-          <ol>
-            <li><a href="#background">Background</a></li>
-            <li><a href="#diagnostic-framework">Diagnostic Framework</a></li>
-            <li><a href="#evaluation-scope">Evaluation Scope</a></li>
-            <li><a href="#datasets">Datasets</a></li>
-            <li><a href="#experimental-results">Experimental Results</a></li>
-            <li><a href="#main-findings">Main Findings</a></li>
-            <li><a href="#limitations">Limitations</a></li>
-            <li><a href="#conclusion">Conclusion</a></li>
-          </ol>
-        </nav>
-        <article class="markdown-body research-article">
-          <h2 id="background">Background</h2>
+      <article class="markdown-body research-article memeval-article">
+        <section id="motivation" class="memeval-section">
+          <p class="memeval-kicker"><b>01</b> — MOTIVATION</p>
+          <h2>A final score cannot explain a memory failure</h2>
           <p>Long-term memory is becoming a core component of persistent LLM agents. Yet these systems still forget user preferences, contradict earlier statements, and fail to use information that appeared much earlier in a conversation.</p>
           <p>Most benchmarks evaluate only the final answer. That single outcome cannot explain whether a failure began when the system wrote a memory, modified it, retrieved it, or tried to reason with it. The result is an engineering blind spot: the same incorrect answer can point to four very different components.</p>
           <p>This project introduces <strong>MemEval</strong>, a provenance-aware diagnostic framework for locating likely failures across the memory lifecycle. It is a diagnostic method rather than a new memory architecture.</p>
-
-          <h2 id="diagnostic-framework">Diagnostic Framework</h2>
+        </section>
+        <section id="method" class="memeval-section">
+          <p class="memeval-kicker"><b>02</b> — METHOD</p>
+          <h2>4 stages, 11 failure types</h2>
           <p>MemEval instruments observable intermediate states and follows each relevant fact from the source dialogue to the generated answer. It assigns the root cause to the earliest stage that deviates, preventing one upstream error from being counted repeatedly as several downstream failures.</p>
-          <table>
-            <caption>Four-stage memory lifecycle and failure taxonomy</caption>
-            <thead><tr><th>Stage</th><th>Function</th><th>Failure types</th></tr></thead>
-            <tbody>
-              <tr><td>Extraction</td><td>Convert dialogue into persistent memories</td><td>Missing, incorrect, or ambiguous information</td></tr>
-              <tr><td>Update</td><td>Consolidate, overwrite, delete, and compress memory</td><td>Erroneous update, deletion, or information weakening</td></tr>
-              <tr><td>Retrieval</td><td>Select and rank memories for a question</td><td>Missed retrieval or unreasonable ranking</td></tr>
-              <tr><td>Utilization</td><td>Use retrieved evidence to construct an answer</td><td>Ignored evidence, reasoning, or format/detail errors</td></tr>
-            </tbody>
-          </table>
+          <figure class="paper-figure paper-figure--wide">
+            <img src="figures/paradigm-diagram.png" style="aspect-ratio: 1230 / 674" alt="Overview of the four-stage memory pipeline: extraction, update, retrieval, and utilization" loading="lazy">
+            <figcaption>The memory pipeline — every fact travels four stages before it can support an answer.</figcaption>
+          </figure>
           <p>Together, these stages define an 11-class error taxonomy. The pipeline view makes each diagnosis actionable: an extraction failure calls for better information preservation, while a utilization failure calls for stronger evidence-grounded reasoning.</p>
-
-          <h2 id="evaluation-scope">Evaluation Scope</h2>
+          <h3 id="error-taxonomy">Error taxonomy</h3>
+          <div class="table-scroll table-scroll--center">
+            <table aria-describedby="cap-taxonomy">
+              <thead><tr><th>Stage</th><th>Label</th><th>Failure</th></tr></thead>
+              <tbody>
+                <tr><td rowspan="3">1 · Extraction</td><td>1.1 Missing Critical Information</td><td>Critical information never enters memory</td></tr>
+                <tr><td>1.2 Incorrect Information</td><td>Incorrect information is stored</td></tr>
+                <tr><td>1.3 Ambiguous Information</td><td>Ambiguous information is stored</td></tr>
+                <tr><td rowspan="3">2 · Update</td><td>2.1 Erroneous Update</td><td>Erroneous update of an existing memory</td></tr>
+                <tr><td>2.2 Erroneous Deletion</td><td>Erroneous deletion of a valid memory</td></tr>
+                <tr><td>2.3 Information Weakening</td><td>Information weakened during consolidation</td></tr>
+                <tr><td rowspan="2">3 · Retrieval</td><td>3.1 Missed Retrieval</td><td>A required memory is not retrieved</td></tr>
+                <tr><td>3.2 Unreasonable Ranking</td><td>Relevant memories ranked unreasonably</td></tr>
+                <tr><td rowspan="3">4 · Utilization</td><td>4.1 Ignored Evidence</td><td>Retrieved evidence is ignored</td></tr>
+                <tr><td>4.2 Reasoning Error</td><td>Reasoning error over correct evidence</td></tr>
+                <tr><td>4.3 Format / Detail Error</td><td>Format or detail error in the answer</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p class="tbl-cap" id="cap-taxonomy">The 11-class failure taxonomy across the four pipeline stages — Extraction (1.1–1.3), Update (2.1–2.3), Retrieval (3.1–3.2), and Utilization (4.1–4.3).</p>
+          <figure class="paper-figure paper-figure--wide">
+            <img src="figures/diagnostic-examples.png" style="aspect-ratio: 1845 / 844" alt="Diagnostic examples of memory failures traced from dialogue through memory states to the final answer" loading="lazy">
+            <figcaption>Diagnostic examples — each failure is traced to the earliest stage that deviates.</figcaption>
+          </figure>
+          <h3 id="evaluation-scope">Evaluation scope</h3>
           <p>The study separates the systems being diagnosed from the models used inside those systems and from the models serving as evaluators.</p>
           <ul>
             <li><strong>Memory systems:</strong> mem0 is the primary testbed; A-mem, MemoryOS, and OpenClaw test cross-architecture transfer.</li>
@@ -87,97 +102,139 @@
             <li><strong>Meta-evaluators:</strong> GPT-5, DeepSeek V3.2 Exp, and GPT-4.1 approximate expert stage attribution through single-model inference, multi-agent discussion, or ensemble voting.</li>
           </ul>
           <p>Expert annotators establish the reference labels by examining each question, answer, supporting dialogue evidence, initial memories, update chains, and retrieved memories. They label only the earliest causal failure and resolve disagreements through discussion.</p>
-
-          <h2 id="datasets">Datasets</h2>
-          <h3>LoCoMo</h3>
-          <p>The primary benchmark contains <strong>1,540 dialogue-grounded QA instances</strong>: 282 Multi-hop, 321 Temporal, 96 Open-domain, and 841 Single-hop questions. These categories stress different components, from retrieval-heavy evidence composition to temporal reasoning and direct recall.</p>
-          <h3>LongMemEval-S</h3>
+          <h3 id="datasets">Datasets</h3>
+          <p>The primary benchmark, LoCoMo, contains <strong>1,540 dialogue-grounded QA instances</strong>: 282 Multi-hop, 321 Temporal, 96 Open-domain, and 841 Single-hop questions. These categories stress different components, from retrieval-heavy evidence composition to temporal reasoning and direct recall.</p>
           <p>A second evaluation uses all <strong>500 long-term-memory QA instances</strong> from LongMemEval-S. Its knowledge-update, cross-session, preference, and temporal tasks test whether the taxonomy transfers beyond LoCoMo's distribution.</p>
-
-          <h2 id="experimental-results">Experimental Results</h2>
-          <h3>Automated diagnostic consistency</h3>
-          <section class="research-visuals" aria-label="Visual summary of MemEval experimental results">
-            <figure class="research-chart">
-              <figcaption>
-                <strong>Stage-level attribution holds up better than subtype diagnosis.</strong>
-                <span>one tick = one percentage point · ink marks automated agreement with expert labels · LoCoMo evaluation</span>
-              </figcaption>
-              <svg id="diagnosis-agreement-chart" viewBox="0 0 400 260" role="img" aria-labelledby="diagnosis-agreement-title diagnosis-agreement-desc" preserveAspectRatio="xMidYMid meet">
-                <title id="diagnosis-agreement-title">Diagnostic agreement between automated and expert diagnosis</title>
-                <desc id="diagnosis-agreement-desc">Exact Match is 76.04 percent and Stage Match is 81.62 percent.</desc>
-              </svg>
-              <p class="research-chart-source">TICK ROWS · LIEFLAT BASICS · MEMEVAL RESULTS</p>
-            </figure>
-            <figure class="research-chart research-chart--wide">
-              <figcaption>
-                <strong>Temporal and single-hop questions are easier to place at the right stage.</strong>
-                <span>paired ladders by question category · faint = Exact Match · ink = Stage Match · one rung = one percentage point</span>
-              </figcaption>
-              <svg id="category-consistency-chart" viewBox="0 0 560 290" role="img" aria-labelledby="category-consistency-title category-consistency-desc" preserveAspectRatio="xMidYMid meet">
-                <title id="category-consistency-title">Diagnostic consistency by LoCoMo question category</title>
-                <desc id="category-consistency-desc">Temporal reaches 87.54 percent Stage Match, Single-hop reaches 83.59 percent, Multi-hop reaches 72.34 percent, and Open-domain reaches 71.88 percent.</desc>
-              </svg>
-              <p class="research-chart-source">PAIRED RUNGS · LIEFLAT BASICS · MEMEVAL RESULTS</p>
-            </figure>
-            <figure class="research-chart">
-              <figcaption>
-                <strong>Larger base models improve QA accuracy only modestly.</strong>
-                <span>one rung = one percentage point · sorted by model scale · mem0 on LoCoMo</span>
-              </figcaption>
-              <svg id="model-scaling-chart" viewBox="0 0 400 260" role="img" aria-labelledby="model-scaling-title model-scaling-desc" preserveAspectRatio="xMidYMid meet">
-                <title id="model-scaling-title">End-to-end QA accuracy for mem0 by base model</title>
-                <desc id="model-scaling-desc">GPT-4.1-mini scores 50.39 percent, GPT-4o-mini scores 50.71 percent, Qwen3.5-35B scores 57.40 percent, and Qwen3.5-122B scores 58.31 percent.</desc>
-              </svg>
-              <p class="research-chart-source">RUNG BARS · LIEFLAT BASICS · MEMEVAL RESULTS</p>
-            </figure>
-          </section>
-          <table>
-            <caption>Agreement between automated and expert diagnosis</caption>
-            <thead><tr><th>Measure</th><th>Agreement</th><th>Interpretation</th></tr></thead>
-            <tbody>
-              <tr><td>Exact Match</td><td>76.04%</td><td>Stage and specific error subtype both agree</td></tr>
-              <tr><td>Stage Match</td><td>81.62%</td><td>The four-stage attribution agrees</td></tr>
-            </tbody>
-          </table>
-          <blockquote><p>The <strong>81.62% Stage Match</strong> measures agreement between automated diagnosis and expert annotation. It is not the QA accuracy of a memory system.</p></blockquote>
-          <table>
-            <caption>Diagnostic consistency by LoCoMo question category</caption>
-            <thead><tr><th>Question category</th><th>Exact Match</th><th>Stage Match</th></tr></thead>
-            <tbody>
-              <tr><td>Multi-hop</td><td>68.44%</td><td>72.34%</td></tr>
-              <tr><td>Temporal</td><td>77.88%</td><td>87.54%</td></tr>
-              <tr><td>Open-domain</td><td>66.67%</td><td>71.88%</td></tr>
-              <tr><td>Single-hop</td><td>78.95%</td><td>83.59%</td></tr>
-            </tbody>
-          </table>
-          <p>Ensemble voting is more stable than a single evaluator or multi-agent discussion. Stage 1 is recognized reliably, but the evaluator has an upstream bias: 40.4% of true Stage 3 failures are attributed to extraction. Multi-hop and open-domain cases therefore continue to benefit from human review.</p>
-
+        </section>
+        <section id="results" class="memeval-section">
+          <p class="memeval-kicker"><b>03</b> — RESULTS</p>
+          <h2>Where each memory system breaks</h2>
+          <div class="memeval-stats">
+            <div class="memeval-stat"><b>73.70%</b><span>QA accuracy for OpenClaw on the full LoCoMo set, with all 405 failures diagnosed by stage</span></div>
+            <div class="memeval-stat"><b>58.31%</b><span>best QA accuracy from scaling mem0's base model — capacity is not the fix</span></div>
+            <div class="memeval-stat"><b>49.60%</b><span>mem0 QA accuracy on LongMemEval-S, where extraction failures dominate further</span></div>
+          </div>
           <h3>Base-model scaling in mem0</h3>
-          <table>
-            <caption>End-to-end QA accuracy for mem0 by base model</caption>
-            <thead><tr><th>Base model</th><th>LoCoMo QA accuracy</th></tr></thead>
-            <tbody>
-              <tr><td>GPT-4.1-mini</td><td>50.39%</td></tr>
-              <tr><td>GPT-4o-mini</td><td>50.71%</td></tr>
-              <tr><td>Qwen3.5-35B</td><td>57.40%</td></tr>
-              <tr><td>Qwen3.5-122B</td><td>58.31%</td></tr>
-            </tbody>
-          </table>
+          <div class="table-scroll">
+            <table aria-describedby="cap-scaling">
+              <thead>
+                <tr>
+                  <th scope="col" rowspan="2">Model</th>
+                  <th class="num" colspan="3" scope="colgroup">Stage 1 · Extraction</th>
+                  <th class="num" colspan="3" scope="colgroup">Stage 2 · Update</th>
+                  <th class="num" colspan="2" scope="colgroup">Stage 3 · Retrieval</th>
+                  <th class="num" colspan="3" scope="colgroup">Stage 4 · Utilization</th>
+                  <th class="num" rowspan="2">Right</th>
+                  <th class="num" rowspan="2">Total</th>
+                  <th class="num" rowspan="2">Labels</th>
+                  <th class="num" rowspan="2">ACC (%)</th>
+                </tr>
+                <tr>
+                  <th class="num">1.1</th><th class="num">1.2</th><th class="num">1.3</th>
+                  <th class="num">2.1</th><th class="num">2.2</th><th class="num">2.3</th>
+                  <th class="num">3.1</th><th class="num">3.2</th>
+                  <th class="num">4.1</th><th class="num">4.2</th><th class="num">4.3</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr class="grp"><th colspan="16" scope="colgroup">Closed-source models</th></tr>
+                <tr>
+                  <th scope="row">GPT-4.1-mini</th>
+                  <td class="num">408</td><td class="num">8</td><td class="num">1</td>
+                  <td class="num">13</td><td class="num">2</td><td class="num">6</td>
+                  <td class="num">228</td><td class="num">16</td>
+                  <td class="num">24</td><td class="num">46</td><td class="num">14</td>
+                  <td class="num">776</td><td class="num">1,540</td><td class="num">766</td>
+                  <td class="num b">50.39</td>
+                </tr>
+                <tr>
+                  <th scope="row">GPT-4o-mini</th>
+                  <td class="num">344</td><td class="num">11</td><td class="num">24</td>
+                  <td class="num">5</td><td class="num">26</td><td class="num">12</td>
+                  <td class="num">88</td><td class="num">6</td>
+                  <td class="num">112</td><td class="num">61</td><td class="num">70</td>
+                  <td class="num">759</td><td class="num">1,540</td><td class="num">781</td>
+                  <td class="num b">50.71</td>
+                </tr>
+                <tr class="grp"><th colspan="16" scope="colgroup">Open-weight models</th></tr>
+                <tr>
+                  <th scope="row">Qwen3.5-35B</th>
+                  <td class="num">289</td><td class="num">17</td><td class="num">9</td>
+                  <td class="num">9</td><td class="num">0</td><td class="num">5</td>
+                  <td class="num">53</td><td class="num">0</td>
+                  <td class="num">34</td><td class="num">40</td><td class="num">35</td>
+                  <td class="num">884</td><td class="num">1,540</td><td class="num">656</td>
+                  <td class="num b">57.40</td>
+                </tr>
+                <tr>
+                  <th scope="row">Qwen3.5-122B</th>
+                  <td class="num">264</td><td class="num">20</td><td class="num">12</td>
+                  <td class="num">14</td><td class="num">6</td><td class="num">11</td>
+                  <td class="num">53</td><td class="num">0</td>
+                  <td class="num">33</td><td class="num">40</td><td class="num">45</td>
+                  <td class="num">898</td><td class="num">1,540</td><td class="num">642</td>
+                  <td class="num b">58.31</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <p class="tbl-cap" id="cap-scaling">Overall diagnostic results on LoCoMo. Labels map to the taxonomy: <strong>Stage 1 (Ext.)</strong> 1.1 Miss, 1.2 Incorrect, 1.3 Ambiguous; <strong>Stage 2 (Upd.)</strong> 2.1 Err. Update, 2.2 Delete, 2.3 Weaken; <strong>Stage 3 (Ret.)</strong> 3.1 Miss, 3.2 Rank; <strong>Stage 4 (Util.)</strong> 4.1 Ignore, 4.2 Reason, 4.3 Format.</p>
           <p>Capacity produces only marginal gains. Stronger models reduce some extraction or retrieval errors but can introduce more ignored-evidence and response-detail errors, shifting the bottleneck downstream rather than removing it.</p>
-
-          <h3>Architecture and dataset transfer</h3>
-          <table>
-            <caption>Diagnostic transfer across memory architectures</caption>
-            <thead><tr><th>Memory system</th><th>Exact Match</th><th>Stage Match</th></tr></thead>
-            <tbody>
-              <tr><td>A-mem</td><td>83.33%</td><td>86.67%</td></tr>
-              <tr><td>MemoryOS</td><td>83.33%</td><td>87.50%</td></tr>
-            </tbody>
-          </table>
+          <h3>Diagnosis by memory system</h3>
+          <p>The same diagnostic pipeline runs unchanged across four memory architectures. The stage profiles differ sharply even where end-to-end accuracy is similar — evidence that comparable scores can hide entirely different engineering problems.</p>
+          <h4>mem0 — primary testbed</h4>
+          <p>Failures concentrate in extraction: missing critical information (1.1) dominates every question category, before retrieval or reasoning get a chance to matter.</p>
+          <div class="paper-figures">
+            <figure class="paper-figure">
+              <img src="figures/mem0-stage-bar.png" alt="mem0: LLM-diagnosed error frequency across the four pipeline stages, stacked by question category" loading="lazy">
+              <figcaption>mem0 — errors by pipeline stage</figcaption>
+            </figure>
+            <figure class="paper-figure">
+              <img src="figures/mem0-category-pies.png" alt="mem0: pie charts of error label distribution for Multi-hop, Temporal, Open-domain, and Single-hop questions" loading="lazy">
+              <figcaption>mem0 — error mix by question category</figcaption>
+            </figure>
+          </div>
+          <h4>A-mem</h4>
+          <p>The bottleneck moves downstream: missed retrieval (3.1) becomes the largest single failure source, while extraction errors shrink relative to mem0.</p>
+          <div class="paper-figures">
+            <figure class="paper-figure">
+              <img src="figures/amem-stage-bar.png" alt="A-mem: LLM-diagnosed error frequency across the four pipeline stages, stacked by question category" loading="lazy">
+              <figcaption>A-mem — errors by pipeline stage</figcaption>
+            </figure>
+            <figure class="paper-figure">
+              <img src="figures/amem-category-pies.png" alt="A-mem: pie charts of error label distribution by LoCoMo question category" loading="lazy">
+              <figcaption>A-mem — error mix by question category</figcaption>
+            </figure>
+          </div>
+          <h4>MemoryOS</h4>
+          <p>Failures split almost evenly between extraction (1.1) and retrieval (3.1), with comparatively little loss in update and utilization.</p>
+          <div class="paper-figures">
+            <figure class="paper-figure">
+              <img src="figures/memoryos-stage-bar.png" alt="MemoryOS: LLM-diagnosed error frequency across the four pipeline stages, stacked by question category" loading="lazy">
+              <figcaption>MemoryOS — errors by pipeline stage</figcaption>
+            </figure>
+            <figure class="paper-figure">
+              <img src="figures/memoryos-category-pies.png" alt="MemoryOS: pie charts of error label distribution by LoCoMo question category" loading="lazy">
+              <figcaption>MemoryOS — error mix by question category</figcaption>
+            </figure>
+          </div>
+          <h4>OpenClaw</h4>
           <p>On the complete LoCoMo set, OpenClaw reaches <strong>73.70% QA accuracy</strong>: 1,135 correct answers and 405 diagnosed failures from 1,540 instances. Missing extraction accounts for 119 failures and missed retrieval for 115.</p>
+          <div class="paper-figures">
+            <figure class="paper-figure">
+              <img src="figures/openclaw-stage-bar.png" alt="OpenClaw: LLM-diagnosed error frequency across the four pipeline stages, stacked by question category" loading="lazy">
+              <figcaption>OpenClaw — errors by pipeline stage</figcaption>
+            </figure>
+            <figure class="paper-figure">
+              <img src="figures/openclaw-category-pies.png" alt="OpenClaw: pie charts of error label distribution by LoCoMo question category" loading="lazy">
+              <figcaption>OpenClaw — error mix by question category</figcaption>
+            </figure>
+          </div>
           <p>On LongMemEval-S, mem0 with GPT-4.1-mini reaches <strong>49.60% QA accuracy</strong>: 248 correct answers and 252 errors. Missing Critical Information accounts for 166 errors, making extraction even more dominant in cross-session and temporal settings.</p>
-
-          <h2 id="main-findings">Main Findings</h2>
+        </section>
+        <section id="insights" class="memeval-section">
+          <p class="memeval-kicker"><b>04</b> — INSIGHTS</p>
+          <h2>What the diagnosis reveals</h2>
           <ol>
             <li><strong>Extraction is the common early bottleneck.</strong> Summary-style compression frequently removes low-frequency entities, qualifiers, implicit evidence, and temporal anchors before they enter persistent memory.</li>
             <li><strong>Downstream bottlenecks depend on the task.</strong> Multi-hop questions expose missed retrieval; temporal tasks expose reasoning errors; some single-hop failures occur because the model ignores evidence that was successfully retrieved.</li>
@@ -185,8 +242,7 @@
             <li><strong>End-to-end accuracy is not enough.</strong> Two systems with similar QA accuracy may require entirely different engineering interventions.</li>
             <li><strong>Automated diagnosis is useful at the trend and stage level.</strong> It can reduce the cost of large-scale analysis, while experts remain necessary for subtle cascading and ambiguous cases.</li>
           </ol>
-
-          <h2 id="limitations">Limitations</h2>
+          <h3 id="limitations">Limitations</h3>
           <ul>
             <li>MemEval requires observable intermediate traces and is not directly applicable to fully black-box memory systems.</li>
             <li>The automated evaluator favors upstream explanations and can confuse retrieval failures with extraction failures.</li>
@@ -194,292 +250,26 @@
             <li>The framework diagnoses failures but does not itself introduce stage-specific fixes.</li>
             <li>The main cross-architecture table does not report the sampled subset size for A-mem and MemoryOS, so those percentages should be treated as preliminary transfer evidence.</li>
           </ul>
-
-          <h2 id="conclusion">Conclusion</h2>
+          <h3 id="conclusion">Conclusion</h3>
           <p>Reliable long-term memory requires more than a stronger language model or a better final QA score. It requires visibility into the entire path from dialogue to stored representation, subsequent updates, retrieval, and final reasoning.</p>
           <p>MemEval turns memory reliability into a pipeline engineering problem. Its central result is that information is often lost before it reaches persistent memory, while complex tasks continue to fail after storage through retrieval and utilization. Stage-wise diagnosis reveals those differences and supports targeted optimization in place of brute-force scaling.</p>
-        </article>
-      </div>
+        </section>
+      </article>
     </main>
     <footer class="site-footer"><div class="footer-inner wrap"><p>© 2026 Vangie</p></div></footer>
     <script>
       (() => {
-        const ns = "http://www.w3.org/2000/svg";
-        const ink = "var(--ink)";
-        const muted = "var(--ink-3)";
-        const grid = "var(--line-2)";
-        const accent = "var(--research)";
-        const rnd = (i, k) => Math.abs(((i * 73856093) ^ (k * 19349663)) % 1000) / 1000;
-        const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-        const make = (parent, tag, attrs = {}) => {
-          const node = document.createElementNS(ns, tag);
-          for (const [key, value] of Object.entries(attrs)) node.setAttribute(key, value);
-          parent.appendChild(node);
-          return node;
-        };
-        const label = (parent, attrs, text) => {
-          const node = make(parent, "text", attrs);
-          node.textContent = text;
-          return node;
-        };
-        const tooltip = (node, text) => {
-          const title = document.createElementNS(ns, "title");
-          title.textContent = text;
-          node.appendChild(title);
-        };
-        const clearSvg = (svg) => {
-          [...svg.children].forEach((child) => {
-            if (!["title", "desc"].includes(child.tagName)) child.remove();
-          });
-        };
-        const reveal = (id, render) => {
-          const svg = document.getElementById(id);
-          if (!svg) return;
-          const run = () => {
-            clearSvg(svg);
-            render(svg);
-          };
-          svg.addEventListener("click", run);
-          svg.style.cursor = "pointer";
-          if (prefersReduced || !("IntersectionObserver" in window)) {
-            run();
-            return;
-          }
-          const observer = new IntersectionObserver((entries) => {
-            if (entries[0].isIntersecting) {
-              run();
-              observer.disconnect();
+        const links = [...document.querySelectorAll(".memeval-subnav a")];
+        const sections = links.map((link) => document.querySelector(link.getAttribute("href"))).filter(Boolean);
+        if ("IntersectionObserver" in window && sections.length) {
+          const spy = new IntersectionObserver((entries) => {
+            for (const entry of entries) {
+              if (!entry.isIntersecting) continue;
+              links.forEach((link) => link.classList.toggle("active", link.getAttribute("href") === `#${entry.target.id}`));
             }
-          }, { threshold: 0.3 });
-          observer.observe(svg);
-        };
-        const tickRows = (svg, data, maxValue) => {
-          const x0 = 122;
-          const tick = 2.48;
-          const y0 = 74;
-          data.forEach(({ label: name, value, focal }, i) => {
-            const y = y0 + i * 66;
-            label(svg, {
-              x: 112,
-              y: y + 3,
-              "font-size": 9,
-              "font-weight": 700,
-              fill: muted,
-              "text-anchor": "end",
-              "letter-spacing": ".07em",
-              class: "research-chart-fade",
-              style: `animation-delay:${i * 80}ms`,
-            }, name.toUpperCase());
-            make(svg, "line", {
-              x1: x0,
-              y1: y + 9,
-              x2: x0 + maxValue * tick,
-              y2: y + 9,
-              stroke: grid,
-              "stroke-width": 0.9,
-              class: "research-chart-fade",
-            });
-            for (let k = 0; k < Math.round(value); k += 1) {
-              const x = x0 + k * tick + tick / 2;
-              const height = 8 + rnd(k + 1, i + 2) * 8;
-              const stroke = focal ? accent : ink;
-              make(svg, "line", {
-                x1: x,
-                y1: y + 9,
-                x2: x,
-                y2: y + 9 - height,
-                stroke,
-                "stroke-width": 0.85,
-                opacity: focal ? 1 : 0.58 + rnd(k + 3, i + 5) * 0.34,
-                class: "research-chart-fade",
-                style: `animation-delay:${i * 80 + k * 6}ms`,
-              });
-              if (k % 10 === 9) make(svg, "circle", {
-                cx: x,
-                cy: y + 14,
-                r: 0.8,
-                fill: muted,
-                opacity: 0.45,
-                class: "research-chart-fade",
-              });
-            }
-            const valueLabel = label(svg, {
-              x: x0 + value * tick + 11,
-              y: y + 4,
-              "font-size": 13,
-              "font-weight": 800,
-              fill: focal ? accent : ink,
-              class: "research-chart-fade",
-              style: `animation-delay:${320 + i * 80}ms`,
-            }, `${value.toFixed(2)}%`);
-            tooltip(valueLabel, `${name}: ${value.toFixed(2)}%`);
-          });
-          label(svg, {
-            x: 200,
-            y: 232,
-            "font-size": 7,
-            "font-weight": 600,
-            fill: muted,
-            "text-anchor": "middle",
-            "letter-spacing": ".12em",
-            class: "research-chart-fade",
-          }, "ONE TICK = ONE PERCENTAGE POINT · DOT MARKS EVERY TENTH");
-        };
-        const pairedRungs = (svg, data) => {
-          const base = 236;
-          const step = 2.1;
-          const halfWidth = 10;
-          data.forEach(({ label: name, exact, stage }, i) => {
-            const x = 80 + i * 126;
-            const xa = x - 14;
-            const xb = x + 14;
-            for (let k = 0; k < Math.round(exact); k += 1) {
-              const y = base - k * step;
-              const width = halfWidth - 1.2 + rnd(k + 1, i + 2) * 2.4;
-              make(svg, "line", {
-                x1: xa - width,
-                y1: y,
-                x2: xa + width,
-                y2: y,
-                stroke: muted,
-                "stroke-width": 0.9,
-                opacity: 0.42 + rnd(k + 2, i + 3) * 0.32,
-                class: "research-chart-fade",
-                style: `animation-delay:${i * 80 + k * 4}ms`,
-              });
-            }
-            for (let k = 0; k < Math.round(stage); k += 1) {
-              const y = base - k * step;
-              const width = halfWidth - 1.2 + rnd(k + 1, i + 7) * 2.4;
-              make(svg, "line", {
-                x1: xb - width,
-                y1: y,
-                x2: xb + width,
-                y2: y,
-                stroke: stage > 86 ? accent : ink,
-                "stroke-width": 0.9,
-                opacity: stage > 86 ? 0.96 : 0.58 + rnd(k + 2, i + 8) * 0.34,
-                class: "research-chart-fade",
-                style: `animation-delay:${120 + i * 80 + k * 4}ms`,
-              });
-            }
-            label(svg, {
-              x: xa,
-              y: base - exact * step - 8,
-              "font-size": 8,
-              "font-weight": 700,
-              fill: muted,
-              "text-anchor": "middle",
-              class: "research-chart-fade",
-            }, exact.toFixed(2));
-            const stageLabel = label(svg, {
-              x: xb,
-              y: base - stage * step - 10,
-              "font-size": 10,
-              "font-weight": 800,
-              fill: stage > 86 ? accent : ink,
-              "text-anchor": "middle",
-              class: "research-chart-fade",
-            }, stage.toFixed(2));
-            tooltip(stageLabel, `${name}: Exact ${exact.toFixed(2)}%, Stage ${stage.toFixed(2)}%`);
-            label(svg, {
-              x,
-              y: base + 20,
-              "font-size": 7.5,
-              "font-weight": 700,
-              fill: muted,
-              "text-anchor": "middle",
-              "letter-spacing": ".07em",
-              class: "research-chart-fade",
-            }, name.toUpperCase());
-          });
-          make(svg, "line", { x1: 42, y1: base + 4, x2: 522, y2: base + 4, stroke: grid, "stroke-width": 0.8, class: "research-chart-fade" });
-          label(svg, {
-            x: 280,
-            y: 278,
-            "font-size": 7,
-            "font-weight": 600,
-            fill: muted,
-            "text-anchor": "middle",
-            "letter-spacing": ".12em",
-            class: "research-chart-fade",
-          }, "FAINT = EXACT MATCH · INK = STAGE MATCH · ACCENT = HIGHEST STAGE MATCH");
-        };
-        const rungBars = (svg, data) => {
-          const base = 214;
-          const step = 2.8;
-          const halfWidth = 14;
-          data.forEach(({ label: name, value, focal }, i) => {
-            const x = 54 + i * 92;
-            for (let k = 0; k < Math.round(value); k += 1) {
-              const y = base - k * step;
-              const width = halfWidth - 1.6 + rnd(k + 1, i + 2) * 3.2;
-              make(svg, "line", {
-                x1: x - width,
-                y1: y,
-                x2: x + width,
-                y2: y,
-                stroke: focal ? accent : ink,
-                "stroke-width": 0.95,
-                opacity: focal ? 0.98 : 0.55 + rnd(k + 2, i + 3) * 0.34,
-                class: "research-chart-fade",
-                style: `animation-delay:${i * 80 + k * 5}ms`,
-              });
-            }
-            const top = base - value * step;
-            const valueLabel = label(svg, {
-              x,
-              y: top - 11,
-              "font-size": 11,
-              "font-weight": 800,
-              fill: focal ? accent : ink,
-              "text-anchor": "middle",
-              class: "research-chart-fade",
-            }, `${value.toFixed(2)}%`);
-            tooltip(valueLabel, `${name}: ${value.toFixed(2)}% QA accuracy`);
-            const words = name.split(" ");
-            words.forEach((word, j) => label(svg, {
-              x,
-              y: base + 18 + j * 10,
-              "font-size": 7,
-              "font-weight": 700,
-              fill: muted,
-              "text-anchor": "middle",
-              "letter-spacing": ".04em",
-              class: "research-chart-fade",
-            }, word.toUpperCase()));
-          });
-          make(svg, "line", { x1: 26, y1: base + 4, x2: 374, y2: base + 4, stroke: grid, "stroke-width": 0.8, class: "research-chart-fade" });
-          label(svg, {
-            x: 200,
-            y: 250,
-            "font-size": 7,
-            "font-weight": 600,
-            fill: muted,
-            "text-anchor": "middle",
-            "letter-spacing": ".12em",
-            class: "research-chart-fade",
-          }, "ONE RUNG = ONE PERCENTAGE POINT · ACCENT = BEST OBSERVED ACCURACY");
-        };
-        window.renderResearchCharts = () => {
-          reveal("diagnosis-agreement-chart", (svg) => tickRows(svg, [
-            { label: "Exact Match", value: 76.04 },
-            { label: "Stage Match", value: 81.62, focal: true },
-          ], 100));
-          reveal("category-consistency-chart", (svg) => pairedRungs(svg, [
-            { label: "Multi-hop", exact: 68.44, stage: 72.34 },
-            { label: "Temporal", exact: 77.88, stage: 87.54 },
-            { label: "Open-domain", exact: 66.67, stage: 71.88 },
-            { label: "Single-hop", exact: 78.95, stage: 83.59 },
-          ]));
-          reveal("model-scaling-chart", (svg) => rungBars(svg, [
-            { label: "GPT-4.1 mini", value: 50.39 },
-            { label: "GPT-4o mini", value: 50.71 },
-            { label: "Qwen3.5 35B", value: 57.40 },
-            { label: "Qwen3.5 122B", value: 58.31, focal: true },
-          ]));
-        };
-        window.renderResearchCharts();
+          }, { rootMargin: "-20% 0px -70% 0px" });
+          sections.forEach((section) => spy.observe(section));
+        }
       })();
     </script>
   </body>

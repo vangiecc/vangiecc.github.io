@@ -172,42 +172,54 @@ test("research lists the completed memory diagnosis project", async () => {
 test("completed memory research has an accessible English detail page", async () => {
   const html = await read("research/chain-of-stage-diagnosis/index.html");
   assert.match(html, /<html lang="en" data-theme="dark">/);
-  assert.match(html, /class="collection-page collection-page--research research-detail"/);
+  assert.match(html, /class="collection-page collection-page--research research-detail memeval"/);
   assert.match(html, /href="\/research\/" aria-current="page"/);
   assert.equal((html.match(/<h1\b/g) ?? []).length, 1);
   assert.match(html, />COMPLETED</);
-  assert.match(html, /class="notes-layout"/);
-  assert.match(html, /class="notes-toc"/);
-  assert.match(html, /class="markdown-body research-article"/);
-  for (const id of ["background", "diagnostic-framework", "evaluation-scope", "datasets", "experimental-results", "main-findings", "limitations", "conclusion"]) {
+  assert.match(html, /class="memeval-subnav"/);
+  for (const anchor of ["#motivation", "#method", "#results", "#insights"]) {
+    assert.match(html, new RegExp(`href="${anchor}"`));
+  }
+  assert.match(html, /class="markdown-body research-article memeval-article"/);
+  for (const id of ["motivation", "method", "results", "insights", "error-taxonomy", "evaluation-scope", "datasets", "limitations", "conclusion"]) {
     assert.match(html, new RegExp(`id="${id}"`));
   }
-  for (const result of ["1,540", "500", "76.04%", "81.62%", "50.39%", "50.71%", "57.40%", "58.31%", "73.70%", "86.67%", "87.50%"] ) {
+  assert.match(html, /4 stages, 11 failure types/);
+  assert.equal((html.match(/class="memeval-stat"/g) ?? []).length, 3);
+  for (const result of ["1,540", "500", "50.39", "50.71", "57.40", "58.31", "73.70%"] ) {
     assert.ok(html.includes(result), `missing result ${result}`);
   }
-  assert.match(html, /81\.62% Stage Match[^.]*agreement[^.]*expert annotation/i);
-  assert.match(html, /not the QA accuracy/i);
-  assert.equal((html.match(/<caption>/g) ?? []).length, 5);
+  assert.equal((html.match(/<caption>/g) ?? []).length, 0);
+  assert.match(html, /class="table-scroll table-scroll--center"/);
+  assert.match(html, /aria-describedby="cap-taxonomy"/);
+  assert.match(html, /class="table-scroll"/);
+  assert.match(html, /aria-describedby="cap-scaling"/);
+  for (const group of ["Closed-source models", "Open-weight models"]) assert.ok(html.includes(group));
+  for (const cell of ["408", "228", "781", "642"]) assert.ok(html.includes(cell), `missing table cell ${cell}`);
   assert.doesNotMatch(html, /\.pdf["?#]|<embed|<iframe|<object/i);
 });
 
-test("completed memory research presents Lieflat-style result visuals alongside tables", async () => {
+test("completed memory research presents the paper's diagnosis figures for each memory system", async () => {
   const html = await read("research/chain-of-stage-diagnosis/index.html");
   const css = await read("assets/css/site.css");
 
-  assert.match(html, /class="research-visuals"/);
-  assert.equal((html.match(/<figure class="[^"]*\bresearch-chart\b/g) ?? []).length, 3);
-  for (const id of ["diagnosis-agreement-chart", "category-consistency-chart", "model-scaling-chart"]) {
-    assert.match(html, new RegExp(`<svg[^>]+id="${id}"`));
+  assert.equal((html.match(/<figure class="paper-figure/g) ?? []).length, 10);
+  for (const src of [
+    "paradigm-diagram", "diagnostic-examples",
+    "mem0-stage-bar", "mem0-category-pies",
+    "amem-stage-bar", "amem-category-pies",
+    "memoryos-stage-bar", "memoryos-category-pies",
+    "openclaw-stage-bar", "openclaw-category-pies",
+  ]) {
+    assert.match(html, new RegExp(`src="figures/${src}\\.png"`));
+    const info = await stat(path.join(root, "research/chain-of-stage-diagnosis/figures", `${src}.png`));
+    assert.ok(info.size > 1000, `${src}.png is unexpectedly small`);
   }
-  for (const template of ["TICK ROWS", "PAIRED RUNGS", "RUNG BARS"]) {
-    assert.match(html, new RegExp(`${template} · LIEFLAT BASICS · MEMEVAL RESULTS`));
+  for (const system of ["mem0 — primary testbed", "A-mem", "MemoryOS", "OpenClaw"]) {
+    assert.ok(html.includes(system), `missing system ${system}`);
   }
-  for (const result of ["76.04%", "81.62%", "87.54%", "58.31%"]) {
-    assert.ok(html.includes(result), `missing visualized result ${result}`);
-  }
-  assert.match(html, /renderResearchCharts/);
-  assert.match(css, /\.research-visuals\s*\{/);
+  assert.doesNotMatch(html, /renderResearchCharts|research-chart/);
+  assert.match(css, /\.paper-figure\s*\{/);
   assert.match(css, /@media\s*\(max-width:\s*720px\)/);
 });
 

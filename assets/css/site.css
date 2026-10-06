@@ -1195,87 +1195,51 @@ button {
   font-weight: 500;
 }
 
-.research-visuals {
+.paper-figures {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 18px;
+  align-items: start;
   margin-block: 1.6em 1.8em;
 }
 
-.research-chart {
+.paper-figure {
   min-width: 0;
   margin: 0;
-  padding: 20px;
-  border-radius: 8px;
-  background: color-mix(in srgb, var(--surface-2) 74%, transparent);
-  color: var(--ink);
 }
 
-.research-chart--wide {
-  grid-column: 1 / -1;
+.memeval-article > section > .paper-figure {
+  margin-block: 1.6em;
 }
 
-.research-chart figcaption {
-  display: grid;
-  gap: 7px;
-  margin-bottom: 12px;
+.paper-figure--wide {
+  max-width: 860px;
+  margin-inline: auto;
 }
 
-.research-chart figcaption strong {
-  max-width: 34ch;
-  color: var(--ink);
-  font-family: var(--sans);
-  font-size: 1rem;
-  font-weight: 700;
-  line-height: 1.24;
+.paper-figure--wide img {
+  aspect-ratio: auto;
 }
 
-.research-chart figcaption span {
-  color: var(--ink-2);
-  font-family: var(--mono);
-  font-size: 0.66rem;
-  font-weight: 500;
-  letter-spacing: 0.05em;
-  line-height: 1.55;
-  text-transform: uppercase;
-}
-
-.research-chart svg {
+.paper-figure img {
   display: block;
   width: 100%;
+  aspect-ratio: 3 / 2;
   height: auto;
-  overflow: visible;
-  color: var(--ink);
+  padding: 14px;
+  border: 1px solid var(--line-2);
+  border-radius: 6px;
+  background: #fff;
+  object-fit: contain;
 }
 
-.research-chart text {
-  font-family: var(--mono);
-}
-
-.research-chart-source {
-  margin-top: 9px;
+.paper-figure figcaption {
+  margin-top: 10px;
   color: var(--ink-3);
-  font-family: var(--mono);
-  font-size: 0.61rem;
-  font-weight: 600;
-  letter-spacing: 0.12em;
-  line-height: 1.45;
-  text-transform: uppercase;
-}
-
-.research-chart-fade {
-  animation: research-chart-fade 720ms cubic-bezier(0.16, 1, 0.3, 1) both;
-}
-
-@keyframes research-chart-fade {
-  from {
-    opacity: 0;
-    transform: translateY(8px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  font-family: var(--sans);
+  font-size: 0.8rem;
+  line-height: 1.5;
+  text-align: center;
 }
 
 .notes-materials {
@@ -1370,16 +1334,309 @@ button {
 }
 
 @media (max-width: 720px) {
-  .research-visuals {
+  .paper-figures {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* MemEval report page (Dream-RSI style) */
+.memeval {
+  --memeval-accent: #2f63e7;
+  --page-accent: var(--memeval-accent);
+}
+
+:root[data-theme="dark"] .memeval {
+  --memeval-accent: #7a9ef8;
+}
+
+.memeval-subnav {
+  position: sticky;
+  top: 64px;
+  z-index: 40;
+  border-bottom: 1px solid var(--line);
+  background: color-mix(in oklab, var(--bg) 82%, transparent);
+  backdrop-filter: blur(14px) saturate(1.15);
+}
+
+.memeval-subnav-inner {
+  display: flex;
+  min-height: 52px;
+  align-items: center;
+  gap: clamp(16px, 3vw, 34px);
+  overflow-x: auto;
+}
+
+.memeval-subnav a {
+  display: inline-flex;
+  min-height: 40px;
+  align-items: center;
+  gap: 7px;
+  border-bottom: 2px solid transparent;
+  color: var(--ink-3);
+  font-family: var(--mono);
+  font-size: 0.74rem;
+  letter-spacing: 0.08em;
+  white-space: nowrap;
+  transition: color 160ms ease, border-color 160ms ease;
+}
+
+.memeval-subnav a span {
+  color: var(--memeval-accent);
+  font-size: 0.66rem;
+}
+
+.memeval-subnav a:hover {
+  color: var(--ink);
+}
+
+.memeval-subnav a.active {
+  border-bottom-color: var(--memeval-accent);
+  color: var(--ink);
+}
+
+.memeval-hero h1 {
+  max-width: 18ch;
+  font-family: var(--sans);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1.02;
+}
+
+.memeval-hero h1 span {
+  color: var(--memeval-accent);
+}
+
+.memeval-subtitle {
+  font-size: 1.3rem !important;
+  color: var(--ink) !important;
+}
+
+.memeval .research-meta b {
+  color: var(--memeval-accent);
+}
+
+.memeval-section {
+  scroll-margin-top: 140px;
+  padding-block: clamp(56px, 9vh, 96px);
+}
+
+.memeval-kicker {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  color: var(--ink-3);
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.18em;
+}
+
+.memeval-kicker b {
+  color: var(--memeval-accent);
+  font-weight: 600;
+}
+
+.memeval-kicker::after {
+  width: 72px;
+  height: 1px;
+  content: "";
+  background: linear-gradient(90deg, var(--memeval-accent), transparent);
+}
+
+.memeval-article {
+  max-width: 1060px;
+  margin-inline: auto;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1.08rem;
+  line-height: 1.78;
+}
+
+.memeval-article h2 {
+  margin: 0.9em 0 0.8em;
+  font-family: var(--sans);
+  font-size: clamp(1.9rem, 3.4vw, 2.5rem);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1.12;
+}
+
+.memeval-article h3 {
+  margin-top: 2.2em;
+  font-family: var(--sans);
+  font-size: 1.2rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.memeval-article h4 {
+  margin-top: 1.8em;
+  font-family: var(--sans);
+  font-size: 1.05rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.memeval-article table,
+.memeval-article .paper-figures,
+.memeval-article .memeval-stats {
+  font-family: var(--sans);
+}
+
+.memeval-article .research-article a,
+.memeval .research-article a {
+  color: var(--memeval-accent);
+  border-bottom-color: color-mix(in srgb, var(--memeval-accent) 50%, transparent);
+}
+
+.memeval .research-article blockquote {
+  border-left-color: var(--memeval-accent);
+}
+
+.memeval .table-scroll {
+  overflow-x: auto;
+  margin-block: 1.6em;
+  padding: 6px 18px 16px;
+  border: 1px solid var(--line-2);
+  border-radius: 14px;
+  background: var(--surface);
+}
+
+.memeval .table-scroll table {
+  display: table;
+  width: 100%;
+  border-collapse: collapse;
+  font-family: var(--sans);
+  font-size: 0.82rem;
+}
+
+.memeval .table-scroll th,
+.memeval .table-scroll td {
+  min-width: 0;
+  padding: 7px 11px;
+  border-bottom: 0;
+  text-align: left;
+  white-space: nowrap;
+}
+
+.memeval .table-scroll thead th {
+  border-bottom: 1px solid var(--line-2);
+  padding-block: 14px 8px;
+  color: var(--ink-3);
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.memeval .table-scroll thead tr:first-child th[scope="colgroup"] {
+  color: var(--ink-2);
+}
+
+.memeval .table-scroll tbody th {
+  color: var(--ink-2);
+  font-family: var(--sans);
+  font-size: 0.82rem;
+  font-weight: 500;
+  letter-spacing: normal;
+  text-transform: none;
+}
+
+.memeval .table-scroll tbody td {
+  color: var(--ink-2);
+}
+
+.memeval .table-scroll tbody tr:not(.grp) + tr:not(.grp) th,
+.memeval .table-scroll tbody tr:not(.grp) + tr:not(.grp) td {
+  border-top: 1px solid var(--line);
+}
+
+.memeval .table-scroll .grp th {
+  padding-top: 16px;
+  padding-bottom: 2px;
+  color: var(--ink-3);
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.memeval .table-scroll .num {
+  font-family: var(--mono);
+  font-size: 0.76rem;
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+}
+
+.memeval .table-scroll thead th.num {
+  font-size: 0.62rem;
+}
+
+.memeval .table-scroll .num.b {
+  color: var(--ink);
+  font-weight: 600;
+}
+
+.memeval .tbl-cap {
+  max-width: none;
+  margin-top: 14px;
+  color: var(--ink-3);
+  font-size: 0.84rem;
+  line-height: 1.6;
+  text-align: center;
+}
+
+.memeval .table-scroll--center table {
+  width: 100%;
+}
+
+.memeval .table-scroll--center th,
+.memeval .table-scroll--center td {
+  text-align: center;
+}
+
+.memeval .table-scroll--center td:last-child {
+  text-align: left;
+}
+
+.memeval-stats {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
+  margin-block: 2.2em;
+}
+
+.memeval-stat {
+  padding: 24px 26px;
+  border: 1px solid var(--line-2);
+  border-radius: 6px;
+}
+
+.memeval-stat b {
+  display: block;
+  color: var(--memeval-accent);
+  font-family: var(--sans);
+  font-size: clamp(2.1rem, 3.6vw, 2.8rem);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1;
+}
+
+.memeval-stat span {
+  display: block;
+  margin-top: 10px;
+  color: var(--ink-2);
+  font-family: var(--sans);
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+@media (max-width: 760px) {
+  .memeval-stats {
     grid-template-columns: 1fr;
   }
 
-  .research-chart {
-    padding: 16px;
-  }
-
-  .research-chart figcaption strong {
-    max-width: none;
-    font-size: 0.95rem;
+  .memeval-section {
+    scroll-margin-top: 128px;
   }
 }
